@@ -1,9 +1,22 @@
 plugins {
     id("java")
+    id("idea")
 }
 
 subprojects {
-    group = "org.tbl"
+
+    group = "org.tbl.microdaddy"
+
+    apply {
+        plugin("java")
+        plugin("idea")
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
 
     repositories {
         mavenCentral()
