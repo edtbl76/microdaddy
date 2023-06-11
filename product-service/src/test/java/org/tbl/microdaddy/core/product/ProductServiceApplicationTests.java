@@ -1,4 +1,4 @@
-package org.tibl.microdaddy.core.product;
+package org.tbl.microdaddy.core.product;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

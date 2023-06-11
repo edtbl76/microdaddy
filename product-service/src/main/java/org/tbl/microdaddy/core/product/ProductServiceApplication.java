@@ -1,9 +1,11 @@
-package org.tibl.microdaddy.core.product;
+package org.tbl.microdaddy.core.product;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan("org.tbl")
 public class ProductServiceApplication {
 
 	public static void main(String[] args) {
