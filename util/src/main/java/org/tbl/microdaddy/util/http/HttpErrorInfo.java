@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.common.util.http;
+package org.tbl.microdaddy.util.http;
 
 
 import lombok.Getter;

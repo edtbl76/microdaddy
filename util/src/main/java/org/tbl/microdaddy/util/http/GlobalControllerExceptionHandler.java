@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.common.util.http;
+package org.tbl.microdaddy.util.http;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
