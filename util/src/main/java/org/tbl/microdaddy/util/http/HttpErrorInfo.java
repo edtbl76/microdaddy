@@ -29,7 +29,7 @@ public class HttpErrorInfo {
         this(null, null, null);
     }
 
-    public int getHttpStatus() {
+    public int getStatus() {
         return httpStatus.value();
     }
 

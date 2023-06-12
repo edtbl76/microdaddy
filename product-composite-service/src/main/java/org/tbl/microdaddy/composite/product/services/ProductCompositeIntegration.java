@@ -21,6 +21,7 @@ import org.tbl.microdaddy.api.exceptions.InvalidInputException;
 import org.tbl.microdaddy.api.exceptions.NotFoundException;
 import org.tbl.microdaddy.util.http.HttpErrorInfo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,18 +88,19 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
                 throw new NotFoundException(getErrorMessage(e));
             } else if (statusCode.equals(UNPROCESSABLE_ENTITY)) {
                 throw new InvalidInputException(getErrorMessage(e));
+            } else {
+                log.warn("Got an unexpected HTTP error: {}, rethrowing.", e.getStatusCode());
+                log.warn("Error Body: {}", e.getResponseBodyAsString());
+                throw e;
             }
-            log.warn("Got an unexpected HTTP error: {}, rethrowing.", e.getStatusCode());
-            log.warn("Error Body: {}", e.getResponseBodyAsString());
-            throw e;
         }
     }
 
     private String getErrorMessage(HttpClientErrorException e) {
         try {
             return mapper.readValue(e.getResponseBodyAsString(), HttpErrorInfo.class).getMessage();
-        } catch (JsonProcessingException ex) {
-            return ex.getMessage();
+        } catch (IOException ex) {
+            return e.getMessage();
         }
     }
 
