@@ -27,7 +27,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         // TODO impl db to replace simulation code
         if (productId < 1) {
-            throw new InvalidInputException("Invalid ProductId: " + productId);
+            throw new InvalidInputException("Invalid productId: " + productId);
         }
 
         if (productId == 113) {
