@@ -2,10 +2,10 @@
 #
 # Usage:
 #
-#   HOST=localhost PORT=7000 ./landscape-e2e-test.sh
+#   HOST=localhost PORT=7000 ./landscape-test.sh
 #
 : ${HOST=localhost}
-: ${PORT=7000}
+: ${PORT=8080}
 : ${PRODUCT_ID_OK=1}
 : ${PRODUCT_ID_NOT_FOUND=13}
 : ${PRODUCT_ID_NO_RECOMMENDATIONS=113}
@@ -49,10 +49,53 @@ function assertEqual() {
   fi
 }
 
+function testUrl() {
+  url=$@
+  if curl $url -ks -f -o /dev/null
+  then
+    return 0
+  else
+    return 1
+  fi;
+}
+
+function waitForService() {
+  url=$@
+  echo -n "Wait for: $url... "
+  n=0
+  until testUrl $url
+  do
+    n=$((n + 1))
+    if [[ $n == 100 ]]
+    then
+      echo "Give up"
+      exit 1
+    else
+      sleep 3
+      echo -n ", retry #$n "
+    fi
+  done
+  echo "DONE, continues..."
+}
+
 set -e
+
+echo "Starting Landscape Tests: " `date`
 
 echo "HOST=${HOST}"
 echo "PORT=${PORT}"
+
+if [[ $@ == *"start"* ]]
+then
+  echo "Restarting test environment..."
+  echo "$ docker-compose down --remove-orphans"
+  docker-compose down --remove-orphans
+  echo "$docker-compose up -d"
+  docker-compose up -d
+fi
+
+waitForService http://$HOST:${PORT}/product-composite/1
+
 
 # Verify normal request. (3 recommendations, 3 reviews)
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
@@ -83,6 +126,14 @@ assertEqual "\"Invalid productId: -1\"" "$(echo $RESPONSE | jq .message)"
 # Verify 400 (Bad Request) returned for a product that isn't a number
 assertCurl 400 "curl http://$HOST:$PORT/product-composite/invalidProductId -s"
 assertEqual "\"Type mismatch.\"" "$(echo $RESPONSE | jq .message)"
+
+
+if [[ $@ == *"stop"* ]]
+then
+  echo "Tests completed, shutting down test environment..."
+  echo "$ docker-compose down"
+  docker-compose down
+fi
 
 echo "End, all tests OK: " `date`
 
