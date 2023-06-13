@@ -1,8 +1,9 @@
 package org.tbl.microdaddy.api.exceptions;
 
-public class InvalidInputException extends RuntimeException{
+import lombok.NoArgsConstructor;
 
-    public InvalidInputException() { }
+@NoArgsConstructor
+public class InvalidInputException extends RuntimeException{
 
     public InvalidInputException(String message) {
         super(message);
