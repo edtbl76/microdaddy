@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:3.1.0"))
-    implementation("org.springdoc:springdoc-openapi-common:1.6.15")
+    implementation("org.springdoc:springdoc-openapi-starter-common:2.1.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

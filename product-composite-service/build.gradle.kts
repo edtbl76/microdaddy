@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":util"))
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.6.15")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")

@@ -1,29 +1,31 @@
 springdoc:
   swagger-ui.path: /openapi/swagger-ui.html
   api-docs.path: /openapi/v3/api-docs
-  packages-to-scan: org.tbl.microdaddy.composite.product
-  paths-to-match: /**
+  packagesToScan: se.magnus.microservices.composite.product
+  pathsToMatch: /**
 
 api:
+
   common:
     version: 1.0.0
     title: Sample API
     description: Description of the API...
-    termsOfService: My Terms of Service
-    license: MIT License
-    licenseUrl: https://opensource.org/license/mit/
-    externalDocDesc: Wiki TBD
-    externalDocUrl: Wiki TBD
+    termsOfService: MY TERMS OF SERVICE
+    license: MY LICENSE
+    licenseUrl: MY LICENSE URL
+
+    externalDocDesc: MY WIKI PAGE
+    externalDocUrl: MY WIKI URL
     contact:
-      name: Ed Mangini
-      url: https://emangini.com
-      email: me@emangini.com
+      name: NAME OF CONTACT
+      url: URL TO CONTACT
+      email: contact@mail.com
 
   responseCodes:
     ok.description: OK
-    badRequest.description: Bad Request, Invalid format of the request. See response message for  more information
+    badRequest.description: Bad Request, invalid format of the request. See response message for more information
     notFound.description: Not found, the specified id does not exist
-    unprocessableEntity.description: Unprocessable entity, input parameters caused the processing to fail.
+    unprocessableEntity.description: Unprocessable entity, input parameters caused the processing to fail. See response message for more information
 
   product-composite:
 
@@ -53,7 +55,7 @@ api:
         404 - A **Not Found** error will be returned
 
         ## Negative product ids
-        422 - An **Unprocessable Entity** error will be returned  
+        422 - An **Unprocessable Entity** error will be returned
 
 server:
   port: 7000

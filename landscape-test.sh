@@ -129,8 +129,8 @@ assertEqual "\"Type mismatch.\"" "$(echo $RESPONSE | jq .message)"
 
 # Verify access to Swagger/OpenAPI URLs
 echo "Swagger/OpenAPI tests"
-assertCurl 302 "curl -s http://$HOST:$PORT/openapi/swagger.ui.html"
-assertCurl 200 "curl -sL http://$HOST:$PORT/openapi/swagger.ui.html"
+assertCurl 302 "curl -s http://$HOST:$PORT/openapi/swagger-ui.html"
+assertCurl 200 "curl -sL http://$HOST:$PORT/openapi/swagger-ui.html"
 assertCurl 200 "curl -s http://$HOST:$PORT/openapi/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config"
 assertCurl 200 "curl -s http://$HOST:$PORT/openapi/v3/api-docs"
 
