@@ -1,27 +1,28 @@
 springdoc:
   swagger-ui.path: /openapi/swagger-ui.html
   api-docs.path: /openapi/v3/api-docs
-  packagesToScan: se.magnus.microservices.composite.product
+  packagesToScan: org.tbl.microdaddy.composite.product
   pathsToMatch: /**
 
 api:
 
   common:
     version: 1.0.0
-    title: Sample API
-    description: Description of the API...
-    termsOfService: MY TERMS OF SERVICE
-    license: MY LICENSE
-    licenseUrl: MY LICENSE URL
+    title: Product Composite API
+    description: Aggregation of Product, Composite, and Review Microservices
+    termsOfService: I don't have any ToS
+    license: MIT License
+    licenseUrl: https://opensource.org/license/mit/
 
-    externalDocDesc: MY WIKI PAGE
-    externalDocUrl: MY WIKI URL
+    externalDocDesc: GitHub Page
+    externalDocUrl: https://github.com/edtbl76/microdaddy
     contact:
-      name: NAME OF CONTACT
-      url: URL TO CONTACT
-      email: contact@mail.com
+      name: Ed Mangini
+      url: https://emangini.com
+      email: me@emangini.com
 
   responseCodes:
+
     ok.description: OK
     badRequest.description: Bad Request, invalid format of the request. See response message for more information
     notFound.description: Not found, the specified id does not exist
@@ -56,6 +57,7 @@ api:
 
         ## Negative product ids
         422 - An **Unprocessable Entity** error will be returned
+
 
 server:
   port: 7000

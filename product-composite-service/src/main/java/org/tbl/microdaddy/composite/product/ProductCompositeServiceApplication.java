@@ -24,7 +24,7 @@ public class ProductCompositeServiceApplication {
     String apiDescription;
     @Value("${api.common.termsOfService}")
     String apiTermsOfService;
-    @Value("${api.common.license")
+    @Value("${api.common.license}")
     String apiLicense;
     @Value("${api.common.licenseUrl}")
     String apiLicenseUrl;
