@@ -23,10 +23,15 @@ subprojects {
     }
 
     dependencies {
+        implementation("org.mapstruct:mapstruct:1.5.5.Final")
         compileOnly("org.projectlombok:lombok:1.18.28")
+        compileOnly("org.mapstruct:mapstruct-processor:1.5.5.Final")
         annotationProcessor("org.projectlombok:lombok:1.18.28")
+        annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
         testImplementation(platform("org.junit:junit-bom:5.9.1"))
         testImplementation("org.junit.jupiter:junit-jupiter")
+        testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
     }
 }
 
