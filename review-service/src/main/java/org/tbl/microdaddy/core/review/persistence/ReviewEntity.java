@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.review.persistence;
+package org.tbl.microdaddy.core.review.persistence;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

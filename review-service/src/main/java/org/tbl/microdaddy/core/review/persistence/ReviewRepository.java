@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.review.persistence;
+package org.tbl.microdaddy.core.review.persistence;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;

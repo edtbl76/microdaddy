@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.review;
+package org.tbl.microdaddy.core.review;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

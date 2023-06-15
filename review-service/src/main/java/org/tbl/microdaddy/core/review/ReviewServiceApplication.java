@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.review;
+package org.tbl.microdaddy.core.review;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

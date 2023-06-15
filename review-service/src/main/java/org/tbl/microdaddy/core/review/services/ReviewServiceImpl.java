@@ -1,4 +1,4 @@
-package org.tbl.microdaddy.review.services;
+package org.tbl.microdaddy.core.review.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
