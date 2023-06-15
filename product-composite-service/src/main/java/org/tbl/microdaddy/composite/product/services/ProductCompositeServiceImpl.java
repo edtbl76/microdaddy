@@ -60,7 +60,9 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                             reviewSummary.subject(),
                             reviewSummary.content(),
                             null);
+                    integration.createReview(review);
                 });
+
             }
         } catch (RuntimeException ex) {
             log.warn("createCompositeProduct failed", ex);
