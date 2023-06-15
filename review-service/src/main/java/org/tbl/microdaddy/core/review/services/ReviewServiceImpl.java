@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.tbl.microdaddy.api.core.review.Review;
 import org.tbl.microdaddy.api.core.review.ReviewService;
 import org.tbl.microdaddy.api.exceptions.InvalidInputException;
+import org.tbl.microdaddy.core.review.persistence.ReviewRepository;
 import org.tbl.microdaddy.util.http.ServiceUtil;
 
 import java.util.ArrayList;
@@ -15,12 +16,22 @@ import java.util.List;
 @Slf4j
 public class ReviewServiceImpl implements ReviewService {
 
+    private final ReviewRepository repository;
+
+    private final ReviewMapper mapper;
+
     private final ServiceUtil serviceUtil;
 
     @Autowired
-    public ReviewServiceImpl(ServiceUtil serviceUtil) {
+    public ReviewServiceImpl(
+            ReviewRepository repository,
+            ReviewMapper mapper,
+            ServiceUtil serviceUtil) {
+        this.repository = repository;
+        this.mapper = mapper;
         this.serviceUtil = serviceUtil;
     }
+
 
     @Override
     public List<Review> getReviews(int productId) {

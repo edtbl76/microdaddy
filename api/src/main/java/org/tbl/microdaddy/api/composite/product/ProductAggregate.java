@@ -9,4 +9,9 @@ public record ProductAggregate(
         List<RecommendationSummary> recommendations,
         List<ReviewSummary> reviews,
         ServiceAddresses serviceAddresses
-) { }
+) {
+
+    public ProductAggregate() {
+        this(0, null, 0, null, null, null);
+    }
+}
