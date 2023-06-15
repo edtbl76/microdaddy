@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface ProductService {
 
@@ -31,5 +32,10 @@ public interface ProductService {
             produces = "application/json")
     Product getProduct(@PathVariable int productId);
 
+    /**
+     * Usage: "curl -X DELETE ${HOST}:${PORT}/product/1
+     * @param productId id of product
+     */
+    void deleteProduct(@PathVariable int productId);
 
 }

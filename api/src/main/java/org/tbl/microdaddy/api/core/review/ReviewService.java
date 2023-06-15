@@ -43,5 +43,5 @@ public interface ReviewService {
      * @param productId id of product
      */
     @DeleteMapping(value = "/review")
-    void deleteReview(@RequestParam(value = "productId", required = true) int productId);
+    void deleteReview(@RequestParam(value = "productId") int productId);
 }
