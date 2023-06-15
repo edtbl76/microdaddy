@@ -4,7 +4,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 
-public class MySqlTestBase {
+public abstract class MySqlTestBase {
     private static MySQLContainer<?> database = new MySQLContainer<>("mysql:8.0.33");
 
     // Ensures the container is started before any JUnit5 code is executed.
