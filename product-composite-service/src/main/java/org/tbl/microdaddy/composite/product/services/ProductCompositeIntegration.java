@@ -151,7 +151,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
 
     @Override
-    public void deleteRecommendation(int productId) {
+    public void deleteRecommendations(int productId) {
 
         try {
             String url = this.recommendationServiceUrl + "?productId=" + productId;
@@ -200,7 +200,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
 
     @Override
-    public void deleteReview(int productId) {
+    public void deleteReviews(int productId) {
 
         try {
             String url = this.reviewServiceUrl + "?productId=" + productId;
