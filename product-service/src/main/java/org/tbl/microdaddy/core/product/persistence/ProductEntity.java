@@ -1,17 +1,16 @@
 package org.tbl.microdaddy.core.product.persistence;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@Document(collation = "products")
+@Document(collection= "products")
 public class ProductEntity {
 
     @Id

@@ -45,4 +45,6 @@ public class ReviewEntity {
         this.subject = subject;
         this.content = content;
     }
+
+    //TODO equals and hashcode
 }
