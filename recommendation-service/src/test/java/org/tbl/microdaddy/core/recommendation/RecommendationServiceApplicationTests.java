@@ -111,9 +111,9 @@ class RecommendationServiceApplicationTests extends MongoDbTestBase {
     @Test
     void getRecommendationsNotFound() {
 
-        int productIdNotFound = 113;
+        int productIdNotFound = 389;
 
-       getAndVerifyRecommendationsByProductId(productIdNotFound, NOT_FOUND)
+       getAndVerifyRecommendationsByProductId(productIdNotFound, OK)
                 .jsonPath("$.length()").isEqualTo(0);
     }
 
@@ -156,7 +156,7 @@ class RecommendationServiceApplicationTests extends MongoDbTestBase {
                 recommendationId,
                 "Author " + recommendationId,
                 recommendationId,
-                "Conent " + recommendationId,
+                "Content " + recommendationId,
                 "serviceAddress"
         );
 

@@ -1,8 +1,8 @@
 package org.tbl.microdaddy.core.recommendation.services;
 
-import com.mongodb.DuplicateKeyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RestController;
 import org.tbl.microdaddy.api.core.recommendation.Recommendation;
 import org.tbl.microdaddy.api.core.recommendation.RecommendationService;
@@ -11,7 +11,6 @@ import org.tbl.microdaddy.core.recommendation.persistence.RecommendationEntity;
 import org.tbl.microdaddy.core.recommendation.persistence.RecommendationRepository;
 import org.tbl.microdaddy.util.http.ServiceUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -46,7 +45,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         } catch (DuplicateKeyException e) {
             throw new InvalidInputException(
                     "Duplicate key, Product Id: " + body.getProductId()
-                    + ", Recommendation id:" + body.getRecommendationId()
+                    + ", Recommendation Id:" + body.getRecommendationId()
             );
         }
     }

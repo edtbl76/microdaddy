@@ -21,7 +21,7 @@ import org.tbl.microdaddy.core.product.persistence.ProductEntity;
 
 @Slf4j
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, EmbeddedMongoAutoConfiguration.class})
-@ComponentScan("org.tbl")
+@ComponentScan("org.tbl.microdaddy")
 public class ProductServiceApplication {
 
 	public static void main(String[] args) {
