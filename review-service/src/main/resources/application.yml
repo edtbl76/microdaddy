@@ -3,15 +3,32 @@ server:
   error:
     include-message: always
 
+# Usually set this to none in production...
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://localhost/reviewdb
+    username: user
+    password: pass
+    hikari:
+      initialization-fail-timeout: 60000
+
 logging:
   level:
     root: info
     org.tbl.microdaddy: debug
+    org.hibernate.sql: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 ---
 spring:
   config:
     activate:
       on-profile: docker
+  datasource:
+    url: jdbc:mysql://mysql/reviewdb
 
 server:
   port: 8080
+

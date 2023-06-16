@@ -1,14 +1,19 @@
 package org.tbl.microdaddy.api.core.recommendation;
 
-public record Recommendation(
-        int productId,
-        int recommendationId,
-        String author,
-        int rate,
-        String content,
-        String serviceAddress) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    public Recommendation() {
-        this(0, 0, null, 0, null, null);
-    }
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Recommendation{
+
+    private int productId;
+    private int recommendationId;
+    private String author;
+    private int rate;
+    private String content;
+    private String serviceAddress;
+
 }

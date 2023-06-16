@@ -1,7 +1,19 @@
 package org.tbl.microdaddy.api.core.product;
 
-public record Product(int productId, String name, int weight, String serviceAddress) {
-    public Product() {
-        this(0, null, 0, null);
-    }
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product {
+
+    private int productId;
+    private String name;
+    private int weight;
+    private String serviceAddress;
+
 }

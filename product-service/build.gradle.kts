@@ -16,16 +16,15 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-	compileOnly("org.projectlombok:lombok")
+	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.testcontainers:testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mongodb")
-}
 
+}
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
