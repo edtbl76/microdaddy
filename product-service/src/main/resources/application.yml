@@ -3,17 +3,27 @@ server:
   error:
     include-message: always
 
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: productdb
+
 logging:
   level:
     root: info
     org.tbl.microdaddy: debug
-
+    org.springframework.data.mongodb.core.MongoTemplate: debug
 
 ---
 spring:
   config:
     activate:
       on-profile: docker
+  data:
+    mongodb:
+      host: mongodb
 
 server:
   port: 8080
