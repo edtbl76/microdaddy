@@ -1,5 +1,6 @@
 package org.tbl.microdaddy.api.core.product;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,7 @@ public interface ProductService {
      * Usage: "curl -X DELETE ${HOST}:${PORT}/product/1
      * @param productId id of product
      */
+    @DeleteMapping(value = "/product/{productId}")
     void deleteProduct(@PathVariable int productId);
 
 }
