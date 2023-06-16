@@ -1,8 +1,8 @@
 package org.tbl.microdaddy.core.product.services;
 
-import com.mongodb.DuplicateKeyException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RestController;
 import org.tbl.microdaddy.api.core.product.Product;
 import org.tbl.microdaddy.api.core.product.ProductService;

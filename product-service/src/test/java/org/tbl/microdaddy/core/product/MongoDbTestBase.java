@@ -3,11 +3,14 @@ package org.tbl.microdaddy.core.product;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 
+@TestPropertySource(properties = "spring.autoconfigure.exclude=" +
+        "de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration")
 public abstract class MongoDbTestBase {
 
-    private static MongoDBContainer database = new MongoDBContainer("mongo:6.3.1");
+    private static MongoDBContainer database = new MongoDBContainer("mongo:6.0.6");
 
     static {
         database.start();
@@ -15,8 +18,8 @@ public abstract class MongoDbTestBase {
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongo.host", database::getHost);
-        registry.add("spring.data.mongo.port", () -> database.getMappedPort(27017));
-        registry.add("spring.data.mongo.database", () -> "test");
+        registry.add("spring.data.mongodb.host", database::getHost);
+        registry.add("spring.data.mongodb.port", () -> database.getMappedPort(27017));
+        registry.add("spring.data.mongodb.database", () -> "test");
     }
 }

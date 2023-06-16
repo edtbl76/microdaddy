@@ -17,6 +17,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static reactor.core.publisher.Mono.just;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class ProductServiceApplicationTests extends MongoDbTestBase {
@@ -70,7 +71,7 @@ class ProductServiceApplicationTests extends MongoDbTestBase {
 		assertFalse(repository.findByProductId(productId).isPresent());
 
 
-		// Idempotency check. Deletion of missing object is OK
+		// Idempotency check. Deletion of a missing object is OK
 		deleteAndVerifyProduct(productId, OK);
 
 	}
@@ -124,6 +125,7 @@ class ProductServiceApplicationTests extends MongoDbTestBase {
 		Product product = new Product(productId, "Name " + productId, productId, "serviceAddress");
 		return client.post()
 				.uri("/product")
+				.body(just(product), Product.class)
 				.accept(APPLICATION_JSON)
 				.exchange()
 				.expectStatus().isEqualTo(expectedStatus)

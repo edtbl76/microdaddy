@@ -4,13 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.tbl.microdaddy.core.product.persistence.ProductEntity;
 import org.tbl.microdaddy.core.product.persistence.ProductRepository;
-import org.testcontainers.shaded.org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
 import java.util.List;
 import java.util.Optional;
@@ -106,7 +106,7 @@ public class PersistenceTests extends MongoDbTestBase {
 
         repository.deleteAll();
 
-        List<ProductEntity> products = rangeClosed(100, 110)
+        List<ProductEntity> products = rangeClosed(101, 110)
                 .mapToObj(id -> new ProductEntity(id, "name " + id, id))
                 .collect(Collectors.toList());
         repository.saveAll(products);
