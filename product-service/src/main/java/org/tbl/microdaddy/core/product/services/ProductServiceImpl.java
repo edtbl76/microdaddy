@@ -35,10 +35,10 @@ public class ProductServiceImpl implements ProductService {
            ProductEntity entity = mapper.apiToEntity(body);
            ProductEntity newEntity = repository.save(entity);
 
-           log.debug("createProduct: entity created for productId: {}", body.productId());
+           log.debug("createProduct: entity created for productId: {}", body.getProductId());
            return mapper.entityToApi(newEntity);
        } catch (DuplicateKeyException ex) {
-           throw new InvalidInputException("Duplicate key, Product Id: " + body.productId());
+           throw new InvalidInputException("Duplicate key, Product Id: " + body.getProductId());
        }
     }
 
@@ -54,9 +54,9 @@ public class ProductServiceImpl implements ProductService {
                         .orElseThrow(() -> new NotFoundException("No product found for productId: " + productId));
 
         Product response = mapper.entityToApi(entity);
-        response.serviceAddress(serviceUtil.getServiceAddress());
+        response.setServiceAddress(serviceUtil.getServiceAddress());
 
-        log.debug("getProduct: found productId: {}", response.productId());
+        log.debug("getProduct: found productId: {}", response.getProductId());
         return response;
     }
 

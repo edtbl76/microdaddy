@@ -2,10 +2,12 @@ package org.tbl.microdaddy.core.review.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RestController;
 import org.tbl.microdaddy.api.core.review.Review;
 import org.tbl.microdaddy.api.core.review.ReviewService;
 import org.tbl.microdaddy.api.exceptions.InvalidInputException;
+import org.tbl.microdaddy.core.review.persistence.ReviewEntity;
 import org.tbl.microdaddy.core.review.persistence.ReviewRepository;
 import org.tbl.microdaddy.util.http.ServiceUtil;
 
@@ -34,43 +36,45 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     @Override
+    public Review createReview(Review body) {
+        try {
+            ReviewEntity entity = mapper.apiToEntity(body);
+            ReviewEntity savedEntity = repository.save(entity);
+
+            log.debug("createReview: created a review entity {}/{}",
+                    body.getProductId(), body.getReviewId());
+            return mapper.entityToApi(savedEntity);
+        } catch (DataIntegrityViolationException ex) {
+            throw new InvalidInputException(
+                    "Duplicate key, Product Id: "
+                    + body.getProductId()
+                    + ", Review Id:"
+                    + body.getReviewId()
+            );
+        }
+
+    }
+
+    @Override
     public List<Review> getReviews(int productId) {
 
-        // TODO impl db to remove simulation code
         if (productId < 1) {
             throw new InvalidInputException("Invalid productId: " + productId);
         }
 
-        if (productId == 213) {
-            log.debug("No reviews found for product id: {}", productId);
-            return new ArrayList<>();
-        }
+        List<ReviewEntity> entities = repository.findByProductId(productId);
+        List<Review> reviews = mapper.entityListToApiList(entities);
+        reviews.forEach(review -> review.setServiceAddress(serviceUtil.getServiceAddress()));
 
-        List<Review> list = new ArrayList<>();
+        log.debug("getReviews: response size: {}", reviews.size());
 
-        list.add(new Review(
-                productId,
-                1,
-                "Author 1",
-                "Subject 1",
-                "Content 1",
-                serviceUtil.getServiceAddress()));
-        list.add(new Review(
-                productId,
-                2,
-                "Author 2",
-                "Subject 2",
-                "Content 2",
-                serviceUtil.getServiceAddress()));
-        list.add(new Review(
-                productId,
-                3,
-                "Author 3",
-                "Subject 3",
-                "Content 3",
-                serviceUtil.getServiceAddress()));
+        return reviews;
 
-        log.debug("/reviews response size: {}",list.size());
-        return list;
+    }
+
+    @Override
+    public void deleteReviews(int productId) {
+        log.debug("deleteReviews: attempts to delete reviews for product w/ productId: {}", productId);
+        repository.deleteAll(repository.findByProductId(productId));
     }
 }

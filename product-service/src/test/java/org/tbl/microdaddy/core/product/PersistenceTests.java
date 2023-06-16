@@ -47,7 +47,7 @@ public class PersistenceTests extends MongoDbTestBase {
         ProductEntity entity = new ProductEntity(2, "name", 2);
         repository.save(entity);
 
-        ProductEntity fetchedEntity = repository.findById(entity.id()).get();
+        ProductEntity fetchedEntity = repository.findById(entity.getId()).get();
         assertEqualsProduct(entity, fetchedEntity);
 
         assertEquals(2, repository.count());
@@ -55,24 +55,24 @@ public class PersistenceTests extends MongoDbTestBase {
 
     @Test
     void update() {
-        savedEntity.name("name2");
+        savedEntity.setName("name2");
         repository.save(savedEntity);
 
-        ProductEntity fetchedEntity = repository.findById(savedEntity.id()).get();
-        assertEquals(1, (long) fetchedEntity.version());
-        assertEquals("name2", fetchedEntity.name());
+        ProductEntity fetchedEntity = repository.findById(savedEntity.getId()).get();
+        assertEquals(1, (long) fetchedEntity.getVersion());
+        assertEquals("name2", fetchedEntity.getName());
     }
 
     @Test
     void delete() {
         repository.delete(savedEntity);
-        assertFalse(repository.existsById(savedEntity.id()));
+        assertFalse(repository.existsById(savedEntity.getId()));
     }
 
 
     @Test
     void getByProductId() {
-        Optional<ProductEntity> entity = repository.findByProductId(savedEntity.productId());
+        Optional<ProductEntity> entity = repository.findByProductId(savedEntity.getProductId());
 
         assertTrue(entity.isPresent());
         assertEqualsProduct(savedEntity, entity.get());
@@ -80,7 +80,7 @@ public class PersistenceTests extends MongoDbTestBase {
 
     @Test
     void validateDuplicateKeyException() {
-        ProductEntity entity = new ProductEntity(savedEntity.productId(), "name", 1);
+        ProductEntity entity = new ProductEntity(savedEntity.getProductId(), "name", 1);
         assertThrows(DuplicateKeyException.class, () -> repository.save(entity));
     }
 
@@ -88,15 +88,15 @@ public class PersistenceTests extends MongoDbTestBase {
     void validateOptimisticLockingFailureException() {
 
         // Store saved setup entity into 2 separate entity objects
-        ProductEntity entityOne = repository.findById(savedEntity.id()).get();
-        ProductEntity entityTwo = repository.findById(savedEntity.id()).get();
+        ProductEntity entityOne = repository.findById(savedEntity.getId()).get();
+        ProductEntity entityTwo = repository.findById(savedEntity.getId()).get();
 
         // Update entity using the first entity object (which will increment the version number)
-        entityOne.name("nameUpdatedFromEntityOne");
+        entityOne.setName("nameUpdatedFromEntityOne");
         repository.save(entityOne);
 
         // update entity using second entity, which fails because 2nd entity has original version.
-        entityTwo.name("nameUpdatedFromEntityTwo");
+        entityTwo.setName("nameUpdatedFromEntityTwo");
         assertThrows(OptimisticLockingFailureException.class, () -> repository.save(entityTwo));
 
     }
@@ -122,7 +122,7 @@ public class PersistenceTests extends MongoDbTestBase {
         Page<ProductEntity> productPage = repository.findAll(page);
 
         String pageMap = productPage.getContent().stream()
-                .map(ProductEntity::productId)
+                .map(ProductEntity::getProductId)
                 .toList()
                 .toString();
 
@@ -133,10 +133,10 @@ public class PersistenceTests extends MongoDbTestBase {
 
 
     private void assertEqualsProduct(ProductEntity expected, ProductEntity actual) {
-        assertEquals(expected.id(), actual.id());
-        assertEquals(expected.version(), actual.version());
-        assertEquals(expected.productId(), actual.productId());
-        assertEquals(expected.name(), actual.name());
-        assertEquals(expected.weight(), actual.weight());
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getVersion(), actual.getVersion());
+        assertEquals(expected.getProductId(), actual.getProductId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getWeight(), actual.getWeight());
     }
 }
