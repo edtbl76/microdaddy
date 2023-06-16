@@ -39,14 +39,14 @@ public class RecommendationServiceImpl implements RecommendationService {
             RecommendationEntity savedEntity = repository.save(entity);
 
             log.debug("createRecommendation: created a recommendation entity: {}/{}",
-                    body.productId(),
-                    body.recommendationId());
+                    body.getProductId(),
+                    body.getRecommendationId());
 
             return mapper.entityToApi(savedEntity);
         } catch (DuplicateKeyException e) {
             throw new InvalidInputException(
-                    "Duplicate key, Product Id: " + body.productId()
-                    + ", Recommendation id:" + body.recommendationId()
+                    "Duplicate key, Product Id: " + body.getProductId()
+                    + ", Recommendation id:" + body.getRecommendationId()
             );
         }
     }
@@ -60,7 +60,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         List<RecommendationEntity> entities = repository.findByProductId(productId);
         List<Recommendation> recommendations = mapper.entityListToApiList(entities);
-        recommendations.forEach(recommendation -> recommendation.serviceAddress(serviceUtil.getServiceAddress()));
+        recommendations.forEach(recommendation -> recommendation.setServiceAddress(serviceUtil.getServiceAddress()));
 
         log.debug("getRecommendations: response size: {}", recommendations.size());
         return recommendations;

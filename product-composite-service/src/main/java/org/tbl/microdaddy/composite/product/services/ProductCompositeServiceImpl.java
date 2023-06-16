@@ -106,18 +106,18 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
             String serviceAddress) {
 
         // product info
-        int productId = product.productId();
-        String productName = product.name();
-        int productWeight = product.weight();
+        int productId = product.getProductId();
+        String productName = product.getName();
+        int productWeight = product.getWeight();
 
         // summarize recommendations
         List<RecommendationSummary> recommendationSummaries =
                 (recommendations == null) ? null : recommendations.stream()
                         .map(recommendation -> new RecommendationSummary(
-                                recommendation.recommendationId(),
-                                recommendation.author(),
-                                recommendation.rate(),
-                                recommendation.content()
+                                recommendation.getRecommendationId(),
+                                recommendation.getAuthor(),
+                                recommendation.getRate(),
+                                recommendation.getContent()
                         ))
                         .toList();
 
@@ -125,19 +125,19 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         List<ReviewSummary> reviewSummaries =
                 (reviews == null) ? null : reviews.stream()
                         .map(review -> new ReviewSummary(
-                                review.reviewId(),
-                                review.author(),
-                                review.subject(),
-                                review.content()
+                                review.getReviewId(),
+                                review.getAuthor(),
+                                review.getSubject(),
+                                review.getContent()
                         ))
                         .toList();
 
 
         // get addresses and aggregate them
-        String productAddress = product.serviceAddress();
+        String productAddress = product.getServiceAddress();
         String recommendationAddress = (recommendations != null && recommendations.size() > 0)
-                ? recommendations.get(0).serviceAddress() : "";
-        String reviewAddress = (reviews != null && reviews.size() > 0) ? reviews.get(0).serviceAddress() : "";
+                ? recommendations.get(0).getServiceAddress() : "";
+        String reviewAddress = (reviews != null && reviews.size() > 0) ? reviews.get(0).getServiceAddress() : "";
         ServiceAddresses serviceAddresses = new ServiceAddresses(
                 serviceAddress,
                 productAddress,

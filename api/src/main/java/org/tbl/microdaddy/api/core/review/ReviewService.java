@@ -22,7 +22,7 @@ public interface ReviewService {
     @PostMapping(
             value = "/review",
             consumes = "application/json",
-            produces = "applicaiton/json"
+            produces = "application/json"
     )
     Review createReview(@RequestBody Review body);
 

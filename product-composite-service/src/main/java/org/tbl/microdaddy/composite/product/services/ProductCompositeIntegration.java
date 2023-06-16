@@ -77,7 +77,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             log.debug("Calling createProduct endpoint at URL: " + url);
 
             Product product = restTemplate.postForObject(url, body, Product.class);
-            log.debug("Created product with id: {}", product.productId());
+            log.debug("Created product with id: {}", product.getProductId());
 
             return product;
         } catch (HttpClientErrorException ex) {
@@ -92,7 +92,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             log.debug("Calling getProduct endpoint at URL: {}", url);
 
             Product product = restTemplate.getForObject(url, Product.class);
-            log.debug("Found product with id: {}", product.productId());
+            log.debug("Found product with id: {}", product.getProductId());
 
             return product;
         } catch (HttpClientErrorException ex) {
@@ -122,7 +122,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             log.debug("Calling createRecommendation endpoint at URL: {}", url);
 
             Recommendation recommendation = restTemplate.postForObject(url, body, Recommendation.class);
-            log.warn("Created a recommendation with product id: {}", recommendation.productId());
+            log.warn("Created a recommendation with product id: {}", recommendation.getProductId());
 
             return recommendation;
         } catch (HttpClientErrorException ex) {
@@ -172,7 +172,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             log.debug("Calling createReview endpoint at URL: {}", url);
 
             Review review = restTemplate.postForObject(url, body, Review.class);
-            log.warn("Created a review with product id: {}", review.productId());
+            log.warn("Created a review with product id: {}", review.getProductId());
 
             return review;
 

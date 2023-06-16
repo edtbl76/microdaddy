@@ -70,7 +70,7 @@ class ProductServiceApplicationTests extends MongoDbTestBase {
 		assertFalse(repository.findByProductId(productId).isPresent());
 
 
-		// Idempotency check. deletion of missing object is OK
+		// Idempotency check. Deletion of missing object is OK
 		deleteAndVerifyProduct(productId, OK);
 
 	}

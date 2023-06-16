@@ -1,18 +1,16 @@
 package org.tbl.microdaddy.core.recommendation.persistence;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
-@Accessors(fluent = true)
+//@Accessors(fluent = true)
 @Document(collection = "recommendations")
 @CompoundIndex(
         name = "product-recommendation-id",
