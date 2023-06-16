@@ -1,9 +1,11 @@
 package org.tbl.microdaddy.core.product;
 
+import de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -18,7 +20,7 @@ import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
 import org.tbl.microdaddy.core.product.persistence.ProductEntity;
 
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, EmbeddedMongoAutoConfiguration.class})
 @ComponentScan("org.tbl")
 public class ProductServiceApplication {
 
@@ -27,7 +29,7 @@ public class ProductServiceApplication {
 
 		String mongoDbHost = context.getEnvironment().getProperty("spring.data.mongodb.host");
 		String mongoDbPort = context.getEnvironment().getProperty("spring.data.mongodb.port");
-		log.info("Connected to MongoDb: " + mongoDbHost + ":" + mongoDbPort);
+		log.info("Connected to MongoDB: " + mongoDbHost + ":" + mongoDbPort);
 
 	}
 
