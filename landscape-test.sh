@@ -78,6 +78,47 @@ function waitForService() {
   echo "DONE, continues..."
 }
 
+function recreateComposite() {
+  local productId=$1
+  local composite=$2
+
+  assertCurl 200 "curl -X DELETE http://$HOST:$PORT/product-composite/${productId} -s"
+  curl -X POST http://$HOST:$PORT/product-composite -H "Content-Type: application/json" --data "$composite"
+}
+
+function seedTestData() {
+  body="{\"productId\":$PRODUCT_ID_NO_RECOMMENDATIONS"
+  body+=\
+  ',"name"product name A","weight":100, "reviews":[
+    {"reviewId":1,"author":"author 1","subject":"subject 1","content":"content 1"},
+    {"reviewId":2,"author":"author 2","subject":"subject 2","content":"content 2"},
+    {"reviewId":3,"author":"author 3","subject":"subject 3","content":"content 3"}
+  ]}'
+  recreateComposite "$PRODUCT_ID_NO_RECOMMENDATIONS" "$body"
+
+  body="{\"productId\":$PRODUCT_ID_NO_REVIEWS"
+  body+=\
+  ',"name":"product name B","weight":200, "recommendations":[
+    {"recommendationId":1,"author":"author 1","rate":1,"content":"content 1"},
+    {"recommendationId":2,"author":"author 2","rate":2,"content":"content 2"},
+    {"recommendationId":3,"author":"author 3","rate":3,"content":"content 3"}
+  ]}'
+  recreateComposite "$PRODUCT_ID_NO_REVIEWS" "$body"
+
+    body="{\"productId\":$PRODUCT_ID_OK"
+    body+=\
+    ',"name":"product name C","weight":300, "recommendations":[
+        {"recommendationId":1,"author":"author 1","rate":1,"content":"content 1"},
+        {"recommendationId":2,"author":"author 2","rate":2,"content":"content 2"},
+        {"recommendationId":3,"author":"author 3","rate":3,"content":"content 3"}
+    ], "reviews":[
+        {"reviewId":1,"author":"author 1","subject":"subject 1","content":"content 1"},
+        {"reviewId":2,"author":"author 2","subject":"subject 2","content":"content 2"},
+        {"reviewId":3,"author":"author 3","subject":"subject 3","content":"content 3"}
+    ]}'
+    recreateComposite "$PRODUCT_ID_OK" "$body"
+}
+
 set -e
 
 echo "Starting Landscape Tests: " `date`
@@ -94,8 +135,9 @@ then
   docker-compose up -d
 fi
 
-waitForService http://$HOST:${PORT}/product-composite/1
+waitForService http://$HOST:${PORT}/product-composite/$PRODUCT_ID_NOT_FOUND
 
+seedTestData
 
 # Verify normal request. (3 recommendations, 3 reviews)
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"

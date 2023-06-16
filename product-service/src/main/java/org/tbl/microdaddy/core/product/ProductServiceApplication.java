@@ -31,7 +31,6 @@ public class ProductServiceApplication {
 
 	}
 
-	//TODO blah blah field injection
 	@Autowired
 	MongoOperations mongoTemplate;
 
