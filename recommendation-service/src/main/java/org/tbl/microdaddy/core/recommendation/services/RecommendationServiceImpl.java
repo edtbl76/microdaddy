@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RestController;
-import org.tbl.microdaddy.api.core.product.Product;
 import org.tbl.microdaddy.api.core.recommendation.Recommendation;
 import org.tbl.microdaddy.api.core.recommendation.RecommendationService;
 import org.tbl.microdaddy.api.exceptions.InvalidInputException;
@@ -14,8 +13,6 @@ import org.tbl.microdaddy.util.http.ServiceUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.logging.Level.FINE;
 
