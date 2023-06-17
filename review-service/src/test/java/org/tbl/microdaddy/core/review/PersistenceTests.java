@@ -24,7 +24,7 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 @DataJpaTest
 @Transactional(propagation = NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = NONE)
-public class PersistenceTests extends MySqlTestBase {
+class PersistenceTests extends MySqlTestBase {
 
     @Autowired
     private ReviewRepository repository;
@@ -67,7 +67,7 @@ public class PersistenceTests extends MySqlTestBase {
         // TODO: see above re: get()
         ReviewEntity fetchedEntity = repository.findById(savedEntity.getId()).get();
         assertEquals(1, (long) fetchedEntity.getVersion());
-        assertEquals("author2", fetchedEntity.getAuthor());
+        assertEquals("authorTwo", fetchedEntity.getAuthor());
     }
 
     @Test
