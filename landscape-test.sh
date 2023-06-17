@@ -89,7 +89,7 @@ function recreateComposite() {
 function seedTestData() {
   body="{\"productId\":$PRODUCT_ID_NO_RECOMMENDATIONS"
   body+=\
-  ',"name"product name A","weight":100, "reviews":[
+  ',"name":"product name A","weight":100, "reviews":[
     {"reviewId":1,"author":"author 1","subject":"subject 1","content":"content 1"},
     {"reviewId":2,"author":"author 2","subject":"subject 2","content":"content 2"},
     {"reviewId":3,"author":"author 3","subject":"subject 3","content":"content 3"}
@@ -135,7 +135,7 @@ then
   docker-compose up -d
 fi
 
-waitForService http://$HOST:${PORT}/product-composite/$PRODUCT_ID_NOT_FOUND
+waitForService curl -X DELETE http://$HOST:${PORT}/product-composite/$PRODUCT_ID_NOT_FOUND
 
 seedTestData
 

@@ -29,7 +29,7 @@ public class RecommendationServiceApplication {
 
         String mongoDbHost = context.getEnvironment().getProperty("spring.data.mongodb.host");
         String mongoDbPort = context.getEnvironment().getProperty("spring.data.mongodb.port");
-        log.info("Connected to MongoDb: " + mongoDbPort + ":" + mongoDbHost);
+        log.info("Connected to MongoDb: " + mongoDbHost + ":" + mongoDbPort);
     }
 
     @Autowired

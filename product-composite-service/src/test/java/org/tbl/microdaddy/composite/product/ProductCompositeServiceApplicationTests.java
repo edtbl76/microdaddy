@@ -143,7 +143,7 @@ class ProductCompositeServiceApplicationTests {
     // Helpers
     private WebTestClient.BodyContentSpec getAndVerifyProduct(int productId, HttpStatus expectedStatus) {
         return client.get()
-                .uri("/product-composite")
+                .uri("/product-composite/" + productId)
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isEqualTo(expectedStatus)
