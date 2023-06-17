@@ -4,14 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.RestController;
+import org.tbl.microdaddy.api.core.product.Product;
 import org.tbl.microdaddy.api.core.recommendation.Recommendation;
 import org.tbl.microdaddy.api.core.recommendation.RecommendationService;
 import org.tbl.microdaddy.api.exceptions.InvalidInputException;
 import org.tbl.microdaddy.core.recommendation.persistence.RecommendationEntity;
 import org.tbl.microdaddy.core.recommendation.persistence.RecommendationRepository;
 import org.tbl.microdaddy.util.http.ServiceUtil;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.logging.Level;
+
+import static java.util.logging.Level.FINE;
 
 @RestController
 @Slf4j
@@ -32,43 +38,53 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
 
     @Override
-    public Recommendation createRecommendation(Recommendation body) {
-        try {
-            RecommendationEntity entity = mapper.apiToEntity(body);
-            RecommendationEntity savedEntity = repository.save(entity);
+    public Mono<Recommendation> createRecommendation(Recommendation body) {
 
-            log.debug("createRecommendation: created a recommendation entity: {}/{}",
-                    body.getProductId(),
-                    body.getRecommendationId());
-
-            return mapper.entityToApi(savedEntity);
-        } catch (DuplicateKeyException e) {
-            throw new InvalidInputException(
-                    "Duplicate key, Product Id: " + body.getProductId()
-                    + ", Recommendation Id:" + body.getRecommendationId()
-            );
+        if (body.getProductId() < 1) {
+            throw new InvalidInputException("Invalid productId: " + body.getProductId());
         }
+
+        RecommendationEntity entity = mapper.apiToEntity(body);
+        return repository.save(entity)
+                .log(log.getName(), FINE)
+                .onErrorMap(DuplicateKeyException.class,
+                        ex -> new InvalidInputException("Duplicate key, Product Id: " + body.getProductId()
+                                + ", Recommendation Id:" + body.getRecommendationId()))
+                .map(mapper::entityToApi);
+
     }
 
     @Override
-    public List<Recommendation> getRecommendations(int productId) {
+    public Flux<Recommendation> getRecommendations(int productId) {
 
         if (productId < 1) {
             throw new InvalidInputException("Invalid productId: " + productId);
         }
 
-        List<RecommendationEntity> entities = repository.findByProductId(productId);
-        List<Recommendation> recommendations = mapper.entityListToApiList(entities);
-        recommendations.forEach(recommendation -> recommendation.setServiceAddress(serviceUtil.getServiceAddress()));
+        log.info("calling getRecommendations for product with id={}", productId);
 
-        log.debug("getRecommendations: response size: {}", recommendations.size());
-        return recommendations;
+        return repository.findByProductId(productId)
+                .log(log.getName(), FINE)
+                .map(mapper::entityToApi)
+                .map(this::setServiceAddress);
+
     }
 
     @Override
-    public void deleteRecommendations(int productId) {
+    public Mono<Void> deleteRecommendations(int productId) {
+
+        if (productId < 1) {
+            throw new InvalidInputException("Invalid productId: " + productId);
+        }
+
         log.debug("deleteRecommendations: attempting to delete recommendations for product with productId: {}",
                 productId);
-        repository.deleteAll(repository.findByProductId(productId));
+
+        return repository.deleteAll(repository.findByProductId(productId));
+    }
+
+    private Recommendation setServiceAddress(Recommendation recommendation) {
+        recommendation.setServiceAddress(serviceUtil.getServiceAddress());
+        return recommendation;
     }
 }

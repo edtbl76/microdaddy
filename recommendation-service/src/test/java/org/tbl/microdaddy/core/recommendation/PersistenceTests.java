@@ -13,10 +13,12 @@ import org.tbl.microdaddy.core.recommendation.persistence.RecommendationReposito
 
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataMongoTest
@@ -29,7 +31,7 @@ class PersistenceTests extends MongoDbTestBase {
 
     @BeforeEach
     void setupDb() {
-        repository.deleteAll();
+        repository.deleteAll().block();
 
         RecommendationEntity entity = new RecommendationEntity(
                 1,
@@ -38,7 +40,7 @@ class PersistenceTests extends MongoDbTestBase {
                 3,
                 "content"
         );
-        savedEntity = repository.save(entity);
+        savedEntity = repository.save(entity).block();
 
         assertEqualsRecommendation(entity, savedEntity);
     }
@@ -53,34 +55,35 @@ class PersistenceTests extends MongoDbTestBase {
                 3,
                 "content"
         );
-        repository.save(entity);
+        repository.save(entity).block();
 
-        RecommendationEntity fetchedEntity = repository.findById(entity.getId()).get();
+        RecommendationEntity fetchedEntity = repository.findById(entity.getId()).block();
         assertEqualsRecommendation(entity, fetchedEntity);
 
-        assertEquals(2, repository.count());
+        assertEquals(2, repository.count().block());
     }
 
     @Test
     void update() {
         savedEntity.setAuthor("author2");
-        repository.save(savedEntity);
+        repository.save(savedEntity).block();
 
-        RecommendationEntity fetchedEntity = repository.findById(savedEntity.getId()).get();
+        RecommendationEntity fetchedEntity = repository.findById(savedEntity.getId()).block();
         assertEquals(1, (long) fetchedEntity.getVersion());
         assertEquals("author2", fetchedEntity.getAuthor());
     }
 
     @Test
     void delete() {
-        repository.delete(savedEntity);
-        assertFalse(repository.existsById(savedEntity.getId()));
+        repository.delete(savedEntity).block();
+        assertNotEquals(TRUE, repository.existsById(savedEntity.getId()).block());
     }
 
 
     @Test
     void getByProductId() {
-        List<RecommendationEntity> entities = repository.findByProductId(savedEntity.getProductId());
+        List<RecommendationEntity> entities = repository.findByProductId(savedEntity.getProductId())
+                .collectList().block();
 
         assertThat(entities, hasSize(1));
         assertEqualsRecommendation(savedEntity, entities.get(0));
@@ -95,27 +98,25 @@ class PersistenceTests extends MongoDbTestBase {
                 3,
                 "content"
         );
-        assertThrows(DuplicateKeyException.class, () -> repository.save(entity));
+        assertThrows(DuplicateKeyException.class, () -> repository.save(entity).block());
     }
 
     @Test
     void validateOptimisticLockingFailureException() {
 
         // Store saved setup entity into 2 separate entity objects
-        RecommendationEntity entityOne = repository.findById(savedEntity.getId()).get();
-        RecommendationEntity entityTwo = repository.findById(savedEntity.getId()).get();
+        RecommendationEntity entityOne = repository.findById(savedEntity.getId()).block();
+        RecommendationEntity entityTwo = repository.findById(savedEntity.getId()).block();
 
         // Update entity using the first entity object (which will increment the version number)
         entityOne.setAuthor("authorUpdatedFromEntityOne");
-        repository.save(entityOne);
+        repository.save(entityOne).block();
 
         // update entity using second entity, which fails because 2nd entity has original version.
         entityTwo.setAuthor("authorUpdatedFromEntityTwo");
-        assertThrows(OptimisticLockingFailureException.class, () -> repository.save(entityTwo));
+        assertThrows(OptimisticLockingFailureException.class, () -> repository.save(entityTwo).block());
 
     }
-
-
 
     private void assertEqualsRecommendation(RecommendationEntity expected, RecommendationEntity actual) {
         assertEquals(expected.getId(), actual.getId());

@@ -1,30 +1,13 @@
 package org.tbl.microdaddy.api.core.review;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ReviewService {
 
-
-    /**
-     * Sample usage:
-     *      curl -X POST ${HOST}:${PORT}/review -H "Content-Type: application/json" \
-     *      --data `{"productId":1234, "reviewId": 5678, "author": "me", "subject": "Cool!", "content": "Neat Product" }'
-     *
-     * @param body a JSON representation of the new composite
-     * @return JSON representation of new product
-     */
-    @PostMapping(
-            value = "/review",
-            consumes = "application/json",
-            produces = "application/json"
-    )
-    Review createReview(@RequestBody Review body);
+    Mono<Review> createReview(Review body);
 
     /**
      * Usage: "curl ${HOST}:${PORT}/review?productId=1
@@ -35,13 +18,7 @@ public interface ReviewService {
     @GetMapping(
             value = "/review",
             produces = "application/json")
-    List<Review> getReviews(@RequestParam(value = "productId") int productId);
+    Flux<Review> getReviews(@RequestParam(value = "productId") int productId);
 
-    /**
-     * Usage: "curl -X DELETE ${HOST}:${PORT}/review?productId=1
-     *
-     * @param productId id of product
-     */
-    @DeleteMapping(value = "/review")
-    void deleteReviews(@RequestParam(value = "productId") int productId);
+    Mono<Void> deleteReviews(int productId);
 }
