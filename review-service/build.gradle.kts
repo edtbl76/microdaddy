@@ -14,6 +14,8 @@ dependencies {
     implementation(platform("org.testcontainers:testcontainers-bom:1.18.3"))
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
+    implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("mysql:mysql-connector-java:8.0.33")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -22,6 +24,12 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
+}
+
+dependencyManagement{
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
+    }
 }
 
 tasks.withType<Test> {

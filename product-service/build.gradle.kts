@@ -15,7 +15,9 @@ dependencies {
 	implementation(platform("org.testcontainers:testcontainers-bom:1.18.3"))
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+	implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
+	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -25,6 +27,13 @@ dependencies {
 	testImplementation("org.testcontainers:mongodb")
 
 }
+
+dependencyManagement{
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.3")
+	}
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
