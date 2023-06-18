@@ -11,13 +11,11 @@ import org.tbl.microdaddy.api.composite.product.ServiceAddresses;
 import org.tbl.microdaddy.api.core.product.Product;
 import org.tbl.microdaddy.api.core.recommendation.Recommendation;
 import org.tbl.microdaddy.api.core.review.Review;
-import org.tbl.microdaddy.api.exceptions.NotFoundException;
 import org.tbl.microdaddy.util.http.ServiceUtil;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static java.util.logging.Level.FINE;
 
@@ -38,7 +36,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
     public Mono<Void> createProduct(ProductAggregate body) {
 
         try {
-            List<Mono> monos = new ArrayList<>();
+            List<Mono<?>> monos = new ArrayList<>();
             log.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.productId());
 
             Product product = new Product(body.productId(), body.name(), body.weight(), null);
