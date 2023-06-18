@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.messaging.Message;
@@ -196,8 +197,31 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
 
+    public Mono<Health> getProductHealth() {
+        return getHealth(this.productServiceUrl);
+    }
+
+    public Mono<Health> getRecommendationHealth() {
+        return getHealth(this.recommendationServiceUrl);
+    }
+
+    public Mono<Health> getReviewHealth() {
+        return getHealth(this.reviewServiceUrl);
+    }
 
     // Helpers
+    private Mono<Health> getHealth(String url) {
+        url += "/actuator/health";
+        log.debug("Calling HealthCheck API at URL: {}", url);
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(healthResult -> new Health.Builder().up().build())
+                .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
+                .log(log.getName(), FINE);
+    }
+
     private void sendMessage(String bindingName, Event<?, ?> event) {
         log.debug("Sending a {} message to {}", event.getEventType(), bindingName);
         Message<?> message = MessageBuilder.withPayload(event)

@@ -39,7 +39,7 @@ import static reactor.core.publisher.Mono.just;
         properties = {"spring.main.allow-bean-definition-overriding=true"}
 )
 @Import({TestChannelBinderConfiguration.class})
-public class MessagingTests {
+class MessagingTests {
 
     @Autowired
     private WebTestClient client;
