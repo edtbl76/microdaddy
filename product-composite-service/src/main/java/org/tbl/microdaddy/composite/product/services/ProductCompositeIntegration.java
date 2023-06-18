@@ -1,12 +1,14 @@
 package org.tbl.microdaddy.composite.product.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.cloud.stream.function.StreamBridge;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -48,11 +50,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     private final String reviewServiceUrl;
 
     private final StreamBridge streamBridge;
+
     private final Scheduler publishEventScheduler;
 
     @Autowired
     public ProductCompositeIntegration(
-            @Qualifier("publishEventScheduler") Scheduler publishEventScheduler,
+            // Had to set this to @Lazy to solve the circular dependency e/
+            // product composite service application.
+            @Qualifier("publishEventScheduler") @Lazy Scheduler publishEventScheduler,
             WebClient.Builder webClient,
             ObjectMapper mapper,
             StreamBridge streamBridge,
@@ -60,17 +65,17 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             @Value("${app.product-service.host}")
             String productServiceHost,
             @Value("${app.product-service.port}")
-            String productServicePort,
+            int productServicePort,
 
             @Value("${app.recommendation-service.host}")
             String recommendationServiceHost,
             @Value("${app.recommendation-service.port}")
-            String recommendationServicePort,
+            int recommendationServicePort,
 
             @Value("${app.review-service.host}")
             String reviewServiceHost,
             @Value("${app.review-service.port}")
-            String reviewServicePort) {
+            int reviewServicePort) {
 
         this.publishEventScheduler = publishEventScheduler;
         this.webClient = webClient.build();
@@ -112,7 +117,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Mono<Void> deleteProduct(int productId) {
 
-        return Mono.fromRunnable(() -> sendMessage("product-out-0",
+        return Mono.fromRunnable(() -> sendMessage("products-out-0",
                         new Event<>(DELETE, productId, null)))
                 .subscribeOn(publishEventScheduler)
                 .then();
@@ -190,8 +195,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Mono<Void> deleteReviews(int productId) {
 
-        return Mono.fromRunnable(
-                () -> sendMessage("reviews-out-0", new Event<>(DELETE, productId, null)))
+        return Mono.fromRunnable(() -> sendMessage("reviews-out-0", new Event<>(DELETE, productId, null)))
                 .subscribeOn(publishEventScheduler)
                 .then();
     }
@@ -222,9 +226,9 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
                 .log(log.getName(), FINE);
     }
 
-    private void sendMessage(String bindingName, Event<?, ?> event) {
+    private void sendMessage(String bindingName, Event event) {
         log.debug("Sending a {} message to {}", event.getEventType(), bindingName);
-        Message<?> message = MessageBuilder.withPayload(event)
+        Message message = MessageBuilder.withPayload(event)
                 .setHeader("partitionKey", event.getKey())
                 .build();
         streamBridge.send(bindingName, message);
@@ -246,6 +250,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         log.warn("Unexpected error: {}, rethrowing", ex.getResponseBodyAsString());
         log.warn("Error body: {}", ex.getResponseBodyAsString());
         return ex;
+
     }
 
     private String getErrorMessage(WebClientResponseException exception) {

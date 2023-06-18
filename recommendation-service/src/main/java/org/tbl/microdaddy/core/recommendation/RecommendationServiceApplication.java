@@ -12,9 +12,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.index.IndexOperations;
 import org.springframework.data.mongodb.core.index.IndexResolver;
 import org.springframework.data.mongodb.core.index.MongoPersistentEntityIndexResolver;
+import org.springframework.data.mongodb.core.index.ReactiveIndexOperations;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
 import org.tbl.microdaddy.core.recommendation.persistence.RecommendationEntity;
@@ -33,7 +35,7 @@ public class RecommendationServiceApplication {
     }
 
     @Autowired
-    MongoOperations mongoTemplate;
+    ReactiveMongoOperations mongoTemplate;
 
     @EventListener(ContextRefreshedEvent.class)
     public void initIndicesAfterStartup() {
@@ -42,7 +44,7 @@ public class RecommendationServiceApplication {
 
         IndexResolver resolver = new MongoPersistentEntityIndexResolver(mappingContext);
 
-        IndexOperations indexOperations = mongoTemplate.indexOps(RecommendationEntity.class);
+        ReactiveIndexOperations indexOperations = mongoTemplate.indexOps(RecommendationEntity.class);
         resolver.resolveIndexFor(RecommendationEntity.class).forEach(indexOperations::ensureIndex);
     }
 

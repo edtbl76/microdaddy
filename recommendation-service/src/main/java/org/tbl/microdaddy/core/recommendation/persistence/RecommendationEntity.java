@@ -2,10 +2,13 @@ package org.tbl.microdaddy.core.recommendation.persistence;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import static java.lang.String.format;
 
 @Data
 @NoArgsConstructor
@@ -34,5 +37,10 @@ public class RecommendationEntity {
         this.author = author;
         this.rating = rating;
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return format("RecommendationEntity: %s/%d", productId, recommendationId);
     }
 }

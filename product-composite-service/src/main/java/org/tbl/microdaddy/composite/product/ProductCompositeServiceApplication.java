@@ -99,7 +99,6 @@ public class ProductCompositeServiceApplication {
         return Schedulers.newBoundedElastic(threadPoolSize, taskQueueSize, "publish-pool");
     }
 
-
     @Autowired
     ProductCompositeIntegration integration;
 

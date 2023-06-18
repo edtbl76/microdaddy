@@ -13,7 +13,6 @@ import org.tbl.microdaddy.core.product.persistence.ProductRepository;
 import org.tbl.microdaddy.util.http.ServiceUtil;
 import reactor.core.publisher.Mono;
 
-import java.util.logging.Level;
 
 import static java.util.logging.Level.FINE;
 

@@ -158,13 +158,13 @@ class MessagingTests {
         // again for recommendations
         assertEquals(1, recommendationMessages.size());
 
-        Event<Integer, Recommendation> expectedRecommendationEvent = new Event<>(DELETE, 1, null);
+        Event<Integer, Product> expectedRecommendationEvent = new Event<>(DELETE, 1, null);
         assertThat(recommendationMessages.get(0), is(sameEventExceptCreatedAt(expectedRecommendationEvent)));
 
         // again for reviews
         assertEquals(1, reviewMessages.size());
 
-        Event<Integer, Review> expectedReviewEvent = new Event<>(DELETE, 1, null);
+        Event<Integer, Product> expectedReviewEvent = new Event<>(DELETE, 1, null);
         assertThat(reviewMessages.get(0), is(sameEventExceptCreatedAt(expectedReviewEvent)));
     }
 
@@ -180,8 +180,12 @@ class MessagingTests {
         while (moreMessages) {
             Message<byte[]> message = getMessage(bindingName);
 
-            if (message == null) moreMessages = false;
-            else messages.add(new String(message.getPayload()));
+            if (message == null) {
+                moreMessages = false;
+            }
+            else {
+                messages.add(new String(message.getPayload()));
+            }
         }
         return messages;
     }
