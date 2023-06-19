@@ -1,11 +1,9 @@
 package org.tbl.microdaddy.composite.product.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Lazy;
@@ -58,7 +56,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             // Had to set this to @Lazy to solve the circular dependency e/
             // product composite service application.
             @Qualifier("publishEventScheduler") @Lazy Scheduler publishEventScheduler,
-            WebClient.Builder webClientBuilder,
+            @Lazy WebClient.Builder webClientBuilder,
             ObjectMapper mapper,
             StreamBridge streamBridge) {
 
