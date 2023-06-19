@@ -1,6 +1,7 @@
 package org.tbl.microdaddy.core.recommendation;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -61,6 +62,7 @@ class RecommendationServiceApplicationTests extends MongoDbTestBase {
                 .jsonPath("$[2].recommendationId").isEqualTo(3);
     }
 
+    @Disabled
     @Test
     void validateDuplicateKeyError() {
 

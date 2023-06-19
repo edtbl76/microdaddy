@@ -2,6 +2,7 @@ package org.tbl.microdaddy.composite.product;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ import org.tbl.microdaddy.api.core.review.Review;
 import org.tbl.microdaddy.api.event.Event;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -32,6 +34,7 @@ import static org.tbl.microdaddy.api.event.Event.Type.CREATE;
 import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
 import static org.tbl.microdaddy.composite.product.IsSameEvent.sameEventExceptCreatedAt;
 import static reactor.core.publisher.Mono.just;
+
 
 @Slf4j
 @SpringBootTest(

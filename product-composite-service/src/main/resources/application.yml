@@ -86,23 +86,27 @@ app:
 spring:
   cloud.stream:
     default-binder: rabbit
-    default.contentType: application/json
     bindings:
       products-out-0:
         destination: products
+#        content-type: application/json
         producer:
+          use-native-encoding: true
           required-groups: auditGroup
       recommendations-out-0:
         destination: recommendations
+#        content-type: application/json
         producer:
+          use-native-encoding: true
           required-groups: auditGroup
       reviews-out-0:
         destination: reviews
+#        content-type: application/json
         producer:
+          use-native-encoding: true
           required-groups: auditGroup
     kafka.binder:
       brokers: 127.0.0.1
-      defaultBrokerPort: 9092
   rabbitmq:
     host: 127.0.0.1
     port: 5672

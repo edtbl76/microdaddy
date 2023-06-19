@@ -1,13 +1,25 @@
 package org.tbl.microdaddy.api.composite.product;
 
-public record ReviewSummary(
-    int reviewId,
-    String author,
-    String subject,
-    String content
-) {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class ReviewSummary {
+
+    private final int reviewId;
+    private final String author;
+    private final String subject;
+    private final String content;
 
     public ReviewSummary() {
-        this(0, null, null, null);
+        this.reviewId = 0;
+        this.author = null;
+        this.subject = null;
+        this.content = null;
     }
 }

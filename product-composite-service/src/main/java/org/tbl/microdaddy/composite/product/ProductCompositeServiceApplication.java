@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.client.RestTemplate;
 import org.tbl.microdaddy.composite.product.services.ProductCompositeIntegration;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;

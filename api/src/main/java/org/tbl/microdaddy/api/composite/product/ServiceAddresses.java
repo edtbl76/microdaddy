@@ -1,13 +1,26 @@
 package org.tbl.microdaddy.api.composite.product;
 
-public record ServiceAddresses(
-    String compositeAddress,
-    String productAddress,
-    String reviewAddress,
-    String recommendationAddress
-) {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public class ServiceAddresses {
+
+    private final String compositeAddress;
+    private final String productAddress;
+    private final String reviewAddress;
+    private final String recommendationAddress;
 
     public ServiceAddresses() {
-        this(null, null, null, null);
+        this.compositeAddress = null;
+        this.productAddress = null;
+        this.reviewAddress = null;
+        this.recommendationAddress = null;
     }
+
 }

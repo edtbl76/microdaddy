@@ -1,7 +1,6 @@
 package org.tbl.microdaddy.composite.product.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -176,7 +175,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Review> getReviews(int productId) {
 
-        String url = this.reviewServiceUrl + "?productId=" + productId;
+        String url = this.reviewServiceUrl + "/review?productId=" + productId;
         log.debug("Calling getReviews endpoint at URL: {}", url);
 
 

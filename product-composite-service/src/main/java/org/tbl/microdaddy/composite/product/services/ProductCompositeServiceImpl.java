@@ -36,7 +36,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
     public Mono<Void> createProduct(ProductAggregate body) {
 
         try {
-            List<Mono<?>> monos = new ArrayList<>();
+            List<Mono> monos = new ArrayList<>();
             log.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.productId());
 
             Product product = new Product(body.productId(), body.name(), body.weight(), null);
