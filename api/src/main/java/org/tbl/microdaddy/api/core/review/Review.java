@@ -2,11 +2,9 @@ package org.tbl.microdaddy.api.core.review;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Review {
 
     private int productId;
@@ -15,5 +13,14 @@ public class Review {
     private String subject;
     private String content;
     private String serviceAddress;
+
+    public Review() {
+        this.productId = 0;
+        this.reviewId = 0;
+        this.author = null;
+        this.subject = null;
+        this.content = null;
+        this.serviceAddress = null;
+    }
 
 }
