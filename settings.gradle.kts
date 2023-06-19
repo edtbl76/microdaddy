@@ -5,5 +5,5 @@ include(
         "recommendation-service",
         "product-composite-service",
         "api",
-        "util")
-include("discovery")
+        "util",
+        "discovery")

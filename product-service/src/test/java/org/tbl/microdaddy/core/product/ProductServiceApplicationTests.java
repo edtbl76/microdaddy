@@ -28,7 +28,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.tbl.microdaddy.api.event.Event.Type.CREATE;
 import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(
+		webEnvironment = RANDOM_PORT,
+		properties = {"eureka.client.enabled=false"}
+)
 class ProductServiceApplicationTests extends MongoDbTestBase {
 
 	@Autowired

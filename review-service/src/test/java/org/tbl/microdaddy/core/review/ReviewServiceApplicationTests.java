@@ -28,7 +28,8 @@ import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
         webEnvironment = RANDOM_PORT,
         properties = {
                 "spring.cloud.stream.default-binder=rabbit",
-                "logging.level.org.tbl.microdaddy=debug"
+                "logging.level.org.tbl.microdaddy=debug",
+                "eureka.client.enabled=false"
         })
 class ReviewServiceApplicationTests extends MySqlTestBase{
 
