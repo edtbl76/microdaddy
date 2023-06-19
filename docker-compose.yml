@@ -77,10 +77,16 @@ services:
     image: rabbitmq:3.12.0-management
     mem_limit: 512m
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
       interval: 5s
       timeout: 2s
       retries: 60
+
+  eureka:
+    build: discovery
+    mem_limit: 512m
+    ports:
+      - "8761:8761"

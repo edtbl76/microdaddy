@@ -126,3 +126,8 @@ services:
     environment:
       - KAFKA_ADVERTISED_HOST_NAME=zookeeper
 
+  eureka:
+    build: discovery
+    mem_limit: 512m
+    ports:
+      - "8761:8761"
