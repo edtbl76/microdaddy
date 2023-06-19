@@ -1,6 +1,7 @@
 package org.tbl.microdaddy.composite.product.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -78,6 +79,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort;
         this.recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort;
         this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort;
+
+
+        // register JavaTimeModule for Object Mapper
+        mapper.registerModule(new JavaTimeModule());
     }
 
 

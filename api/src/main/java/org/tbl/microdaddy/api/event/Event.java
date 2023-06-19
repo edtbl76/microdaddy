@@ -1,10 +1,14 @@
 package org.tbl.microdaddy.api.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.key.ZonedDateTimeKeySerializer;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static java.time.ZonedDateTime.now;
 
 public class Event <K, T> {
@@ -17,8 +21,9 @@ public class Event <K, T> {
     private final K key;
     private final T data;
 
-
+    // TODO, there is a bug w/ this. Solve it later.
     private final ZonedDateTime eventCreatedAt;
+//    private final LocalDateTime eventCreatedAt;
 
     public Event() {
         this.eventType = null;
@@ -31,6 +36,7 @@ public class Event <K, T> {
         this.eventType = eventType;
         this.key = key;
         this.data = data;
+//        this.eventCreatedAt = now().toLocalDateTime();
         this.eventCreatedAt = now();
     }
 
@@ -46,8 +52,14 @@ public class Event <K, T> {
         return data;
     }
 
-    @JsonSerialize(using = ZonedDateTimeKeySerializer.class)
+//    @JsonSerialize(using = ZonedDateTimeKeySerializer.class)
+    @JsonSerialize(using = CustomZonedDateTimeSerializer.class)
     public ZonedDateTime getEventCreatedAt() {
         return eventCreatedAt;
     }
+
+//    @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
+//    public LocalDateTime getEventCreatedAt() {
+//        return eventCreatedAt;
+//    }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -14,10 +15,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE;
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
+
 @Slf4j
 public class IsSameEvent extends TypeSafeMatcher<String> {
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper()
+//            .findAndRegisterModules()
+            .registerModule(new JavaTimeModule())
+            .disable(WRITE_DATES_AS_TIMESTAMPS)
+            .disable(ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
+
     private Event expectedEvent;
 
     private IsSameEvent(Event expectedEvent) {
@@ -27,7 +36,9 @@ public class IsSameEvent extends TypeSafeMatcher<String> {
     @Override
     protected boolean matchesSafely(String eventAsJson) {
 
-        if (expectedEvent == null) return false;
+        if (expectedEvent == null) {
+            return false;
+        }
 
         log.trace("Convert following json string to a map: {}", eventAsJson);
         Map mapEvent = convertJsonStringToMap(eventAsJson);

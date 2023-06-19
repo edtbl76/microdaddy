@@ -110,6 +110,7 @@ spring:
     username: guest
     password: guest
 
+
 logging.level:
     root: info
     org.tbl.microdaddy: debug
