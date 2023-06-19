@@ -37,39 +37,40 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         try {
             List<Mono> monos = new ArrayList<>();
-            log.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.productId());
 
-            Product product = new Product(body.productId(), body.name(), body.weight(), null);
+            log.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.getProductId());
+
+            Product product = new Product(body.getProductId(), body.getName(), body.getWeight(), null);
             monos.add(integration.createProduct(product));
 
-            if (body.recommendations() != null) {
-                body.recommendations().forEach(recommendationSummary-> {
+            if (body.getRecommendations() != null) {
+                body.getRecommendations().forEach(recommendationSummary-> {
                     Recommendation recommendation = new Recommendation(
-                            body.productId(),
-                            recommendationSummary.recommendationId(),
-                            recommendationSummary.author(),
-                            recommendationSummary.rate(),
-                            recommendationSummary.content(),
+                            body.getProductId(),
+                            recommendationSummary.getRecommendationId(),
+                            recommendationSummary.getAuthor(),
+                            recommendationSummary.getRate(),
+                            recommendationSummary.getContent(),
                             null);
                     monos.add(integration.createRecommendation(recommendation));
                 });
             }
 
-            if (body.reviews() != null) {
-                body.reviews().forEach(reviewSummary -> {
+            if (body.getReviews() != null) {
+                body.getReviews().forEach(reviewSummary -> {
                     Review review = new Review(
-                            body.productId(),
-                            reviewSummary.reviewId(),
-                            reviewSummary.author(),
-                            reviewSummary.subject(),
-                            reviewSummary.content(),
+                            body.getProductId(),
+                            reviewSummary.getReviewId(),
+                            reviewSummary.getAuthor(),
+                            reviewSummary.getSubject(),
+                            reviewSummary.getContent(),
                             null);
                     monos.add(integration.createReview(review));
                 });
 
             }
 
-            log.debug("createCompositeProduct: composite entities created for productId: {}", body.productId());
+            log.debug("createCompositeProduct: composite entities created for productId: {}", body.getProductId());
 
             return Mono.zip(objects -> "", monos.toArray(new Mono[0]))
                     .doOnError(ex -> log.warn("createCompositeProduct failed: {}", ex.toString()))
@@ -126,8 +127,8 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         // product info
         int productId = product.getProductId();
-        String productName = product.getName();
-        int productWeight = product.getWeight();
+        String name = product.getName();
+        int weight = product.getWeight();
 
         // summarize recommendations
         List<RecommendationSummary> recommendationSummaries =
@@ -154,9 +155,10 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         // get addresses and aggregate them
         String productAddress = product.getServiceAddress();
+        String reviewAddress = (reviews != null && reviews.size() > 0) ? reviews.get(0).getServiceAddress() : "";
         String recommendationAddress = (recommendations != null && recommendations.size() > 0)
                 ? recommendations.get(0).getServiceAddress() : "";
-        String reviewAddress = (reviews != null && reviews.size() > 0) ? reviews.get(0).getServiceAddress() : "";
+
         ServiceAddresses serviceAddresses = new ServiceAddresses(
                 serviceAddress,
                 productAddress,
@@ -166,8 +168,8 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         return new ProductAggregate(
                 productId,
-                productName,
-                productWeight,
+                name,
+                weight,
                 recommendationSummaries,
                 reviewSummaries,
                 serviceAddresses);

@@ -2,7 +2,6 @@ package org.tbl.microdaddy.composite.product;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +20,6 @@ import org.tbl.microdaddy.api.core.review.Review;
 import org.tbl.microdaddy.api.event.Event;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -77,8 +75,8 @@ class MessagingTests {
 
         Event<Integer, Product> expectedEvent = new Event<>(
                 CREATE,
-                composite.productId(),
-                new Product(composite.productId(), composite.name(), composite.weight(), null));
+                composite.getProductId(),
+                new Product(composite.getProductId(), composite.getName(), composite.getWeight(), null));
 
         assertThat(productMessages.get(0), is(sameEventExceptCreatedAt(expectedEvent)));
 
@@ -107,38 +105,38 @@ class MessagingTests {
 
         Event<Integer, Product> expectedEvent = new Event<>(
                 CREATE,
-                composite.productId(),
-                new Product(composite.productId(), composite.name(), composite.weight(), null));
+                composite.getProductId(),
+                new Product(composite.getProductId(), composite.getName(), composite.getWeight(), null));
         assertThat(productMessages.get(0), is(sameEventExceptCreatedAt(expectedEvent)));
 
         // Check recommendation
         assertEquals(1, recommendationMessages.size());
-        RecommendationSummary recommendationSummary = composite.recommendations().get(0);
+        RecommendationSummary recommendationSummary = composite.getRecommendations().get(0);
         Event<Integer, Recommendation> expectedRecommendationEvent = new Event<>(
                 CREATE,
-                composite.productId(),
+                composite.getProductId(),
                 new Recommendation(
-                        composite.productId(),
-                        recommendationSummary.recommendationId(),
-                        recommendationSummary.author(),
-                        recommendationSummary.rate(),
-                        recommendationSummary.content(),
+                        composite.getProductId(),
+                        recommendationSummary.getRecommendationId(),
+                        recommendationSummary.getAuthor(),
+                        recommendationSummary.getRate(),
+                        recommendationSummary.getContent(),
                         null
                 ));
         assertThat(recommendationMessages.get(0), is(sameEventExceptCreatedAt(expectedRecommendationEvent)));
 
         // Check review
         assertEquals(1, reviewMessages.size());
-        ReviewSummary reviewSummary = composite.reviews().get(0);
+        ReviewSummary reviewSummary = composite.getReviews().get(0);
         Event<Integer, Review> expectedReviewEvent = new Event<>(
                 CREATE,
-                composite.productId(),
+                composite.getProductId(),
                 new Review(
-                        composite.productId(),
-                        reviewSummary.reviewId(),
-                        reviewSummary.author(),
-                        reviewSummary.subject(),
-                        reviewSummary.content(),
+                        composite.getProductId(),
+                        reviewSummary.getReviewId(),
+                        reviewSummary.getAuthor(),
+                        reviewSummary.getSubject(),
+                        reviewSummary.getContent(),
                         null
                 ));
         assertThat(reviewMessages.get(0), is(sameEventExceptCreatedAt(expectedReviewEvent)));

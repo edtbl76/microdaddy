@@ -69,8 +69,7 @@ api:
 
 server:
   port: 7000
-  error:
-    include-message: always
+  error.include-message: always
 
 app:
   product-service:
@@ -89,24 +88,22 @@ spring:
     bindings:
       products-out-0:
         destination: products
-#        content-type: application/json
         producer:
-          use-native-encoding: true
+#          use-native-encoding: true
           required-groups: auditGroup
       recommendations-out-0:
         destination: recommendations
-#        content-type: application/json
         producer:
-          use-native-encoding: true
+#          use-native-encoding: true
           required-groups: auditGroup
       reviews-out-0:
         destination: reviews
-#        content-type: application/json
         producer:
-          use-native-encoding: true
+#          use-native-encoding: true
           required-groups: auditGroup
     kafka.binder:
       brokers: 127.0.0.1
+      defaultBrokerPort: 9092
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -165,5 +162,6 @@ spring:
     kafka.binder.replication-factor: 1
   kafka.bootstrap-servers: kafka:9092
 
-management.health.rabbit.enabled: true
+management.health.rabbit.enabled: false
+
 

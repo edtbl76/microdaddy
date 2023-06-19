@@ -61,20 +61,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             ObjectMapper mapper,
             StreamBridge streamBridge,
 
-            @Value("${app.product-service.host}")
-            String productServiceHost,
-            @Value("${app.product-service.port}")
-            int productServicePort,
+            @Value("${app.product-service.host}") String productServiceHost,
+            @Value("${app.product-service.port}") int productServicePort,
 
-            @Value("${app.recommendation-service.host}")
-            String recommendationServiceHost,
-            @Value("${app.recommendation-service.port}")
-            int recommendationServicePort,
+            @Value("${app.recommendation-service.host}") String recommendationServiceHost,
+            @Value("${app.recommendation-service.port}") int recommendationServicePort,
 
-            @Value("${app.review-service.host}")
-            String reviewServiceHost,
-            @Value("${app.review-service.port}")
-            int reviewServicePort) {
+            @Value("${app.review-service.host}") String reviewServiceHost,
+            @Value("${app.review-service.port}") int reviewServicePort) {
 
         this.publishEventScheduler = publishEventScheduler;
         this.webClient = webClient.build();
@@ -90,9 +84,8 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Mono<Product> createProduct(Product body) {
 
-
         return Mono.fromCallable(() -> {
-            sendMessage("products-out-0", new Event<>(CREATE, body.getProductId(), body));
+            sendMessage("products-out-0", new Event(CREATE, body.getProductId(), body));
             return body;
         }).subscribeOn(publishEventScheduler);
 
@@ -117,7 +110,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     public Mono<Void> deleteProduct(int productId) {
 
         return Mono.fromRunnable(() -> sendMessage("products-out-0",
-                        new Event<>(DELETE, productId, null)))
+                        new Event(DELETE, productId, null)))
                 .subscribeOn(publishEventScheduler)
                 .then();
 
@@ -127,7 +120,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     public Mono<Recommendation> createRecommendation(Recommendation body) {
 
         return Mono.fromCallable(() -> {
-            sendMessage("recommendations-out-0", new Event<>(CREATE, body.getProductId(), body));
+            sendMessage("recommendations-out-0", new Event(CREATE, body.getProductId(), body));
             return body;
         }).subscribeOn(publishEventScheduler);
 
@@ -154,8 +147,8 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Mono<Void> deleteRecommendations(int productId) {
 
-        return Mono.fromRunnable(
-                () -> sendMessage("recommendations-out-0", new Event<>(DELETE, productId, null)))
+        return Mono.fromRunnable(() -> sendMessage("recommendations-out-0",
+                        new Event(DELETE, productId, null)))
                 .subscribeOn(publishEventScheduler)
                 .then();
 
@@ -166,7 +159,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     public Mono<Review> createReview(Review body) {
 
         return Mono.fromCallable(() -> {
-            sendMessage("reviews-out-0", new Event<>(CREATE, body.getProductId(), body));
+            sendMessage("reviews-out-0", new Event(CREATE, body.getProductId(), body));
             return body;
         }).subscribeOn(publishEventScheduler);
 
@@ -190,11 +183,11 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
-
     @Override
     public Mono<Void> deleteReviews(int productId) {
 
-        return Mono.fromRunnable(() -> sendMessage("reviews-out-0", new Event<>(DELETE, productId, null)))
+        return Mono.fromRunnable(() -> sendMessage("reviews-out-0",
+                        new Event(DELETE, productId, null)))
                 .subscribeOn(publishEventScheduler)
                 .then();
     }
