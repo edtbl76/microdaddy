@@ -2,7 +2,6 @@ package org.tbl.microdaddy.api.event;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.key.ZonedDateTimeKeySerializer;
-import lombok.Getter;
 
 import java.time.ZonedDateTime;
 
@@ -14,14 +13,8 @@ public class Event <K, T> {
         CREATE,
         DELETE
     }
-
-    @Getter
     private final Type eventType;
-
-    @Getter
     private final K key;
-
-    @Getter
     private final T data;
 
 
@@ -39,6 +32,18 @@ public class Event <K, T> {
         this.key = key;
         this.data = data;
         this.eventCreatedAt = now();
+    }
+
+    public Type getEventType() {
+        return eventType;
+    }
+
+    public K getKey() {
+        return key;
+    }
+
+    public T getData() {
+        return data;
     }
 
     @JsonSerialize(using = ZonedDateTimeKeySerializer.class)
