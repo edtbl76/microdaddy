@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.Exec
+
 plugins {
     id("java")
     id("idea")
@@ -35,9 +37,12 @@ subprojects {
         testAnnotationProcessor("org.projectlombok:lombok:1.18.28")
 
     }
+
+    tasks.test {
+        useJUnitPlatform()
+        environment("DOCKER_HOST", "unix:///home/edmangini/.docker/desktop/docker.sock")
+        environment("TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE", "/var/run/docker.sock")
+    }
+
 }
 
-
-tasks.test {
-    useJUnitPlatform()
-}
