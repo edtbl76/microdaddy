@@ -176,7 +176,7 @@ then
   echo "Restarting test environment..."
   echo "$ docker-compose down --remove-orphans"
   docker-compose down --remove-orphans
-  echo "$docker-compose up -d"
+  echo "$ docker-compose up -d"
   docker-compose up -d
 fi
 
@@ -227,7 +227,7 @@ assertCurl 200 "curl -sL http://$HOST:$PORT/openapi/swagger-ui.html"
 assertCurl 200 "curl -s http://$HOST:$PORT/openapi/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config"
 assertCurl 200 "curl -s http://$HOST:$PORT/openapi/v3/api-docs"
 assertEqual "3.0.1" "$(echo $RESPONSE | jq -r .openapi)"
-assertEqual "http://$HOST:$PORT" "$(echo $RESPONSE | jq -r .servers[].url)}"
+assertEqual "http://$HOST:$PORT" "$(echo $RESPONSE | jq -r .servers[].url)"
 assertCurl 200 "curl -s http://$HOST:$PORT/openapi/v3/api-docs.yaml"
 
 
