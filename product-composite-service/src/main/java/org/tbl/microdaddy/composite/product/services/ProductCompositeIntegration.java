@@ -40,14 +40,14 @@ import static reactor.core.publisher.Flux.empty;
 @Slf4j
 public class ProductCompositeIntegration implements ProductService, RecommendationService, ReviewService {
 
-    private static final String PRODUCT_SERVICE_URL = "http:/product";
-    private static final String RECOMMENDATION_SERVICE_URL = "http:/recommendation";
-    private static final String REVIEW_SERVICE_URL = "http:/review";
+    private static final String PRODUCT_SERVICE_URL = "http://product";
+    private static final String RECOMMENDATION_SERVICE_URL = "http://recommendation";
+    private static final String REVIEW_SERVICE_URL = "http://review";
 
-    private final Scheduler publishEventScheduler;
+
     private final WebClient webClient;
     private final ObjectMapper mapper;
-
+    private final Scheduler publishEventScheduler;
     private final StreamBridge streamBridge;
 
 
@@ -56,7 +56,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             // Had to set this to @Lazy to solve the circular dependency e/
             // product composite service application.
             @Qualifier("publishEventScheduler") @Lazy Scheduler publishEventScheduler,
-            @Lazy WebClient.Builder webClientBuilder,
+            WebClient.Builder webClientBuilder,
             ObjectMapper mapper,
             StreamBridge streamBridge) {
 

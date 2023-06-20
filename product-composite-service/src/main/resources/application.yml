@@ -71,9 +71,13 @@ server:
   port: 7000
   error.include-message: always
 
-app.eureka-server: localhost
+app:
+  eureka-server: localhost
+
 
 spring:
+#  TODO remove this at some point.
+  main.allow-circular-references: true
   application.name: product-composite
   cloud.stream:
     default-binder: rabbit
@@ -105,7 +109,7 @@ spring:
 eureka:
   client:
     service-url:
-      default-zone: http://${app.eureka-server}:8761/eureka/
+      defaultZone: http://${app.eureka-server}:8761/eureka/
     initial-instance-info-replication-interval-seconds: 5
     registry-fetch-interval-seconds: 5
   instance:
@@ -128,8 +132,8 @@ spring:
 
 server.port: 8080
 
-app.eureka-server: eureka
-
+app:
+  eureka-server: eureka
 
 ---
 spring:
