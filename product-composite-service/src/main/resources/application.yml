@@ -3,6 +3,8 @@ springdoc:
   api-docs.path: /openapi/v3/api-docs
   packagesToScan: org.tbl.microdaddy.composite.product
   pathsToMatch: /**
+  cache.disabled: true
+
 
 api:
 
@@ -70,6 +72,7 @@ api:
 server:
   port: 7000
   error.include-message: always
+  forward-headers-strategy: framework
 
 app:
   eureka-server: localhost
