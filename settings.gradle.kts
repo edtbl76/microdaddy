@@ -6,4 +6,5 @@ include(
         "product-composite-service",
         "api",
         "util",
-        "discovery")
+        "discovery",
+        "gateway")
