@@ -68,8 +68,11 @@ logging.level:
   org.springframework.cloud.gateway: trace
 
 management:
-  endpoint.health.show-details: always
+  endpoint:
+    health.show-details: always
+    gateway.enabled: true
   endpoints.web.exposure.include: "*"
+
 
 ---
 spring.config.activate.on-profile: docker
