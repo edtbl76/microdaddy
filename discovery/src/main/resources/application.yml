@@ -1,6 +1,10 @@
 server:
   port: 8761
 
+app:
+  eureka-username: username
+  eureka-password: password
+
 eureka:
   instance.hostname: localhost
   client:
