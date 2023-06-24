@@ -8,3 +8,4 @@ include(
         "util",
         "discovery",
         "gateway")
+include("authz")
