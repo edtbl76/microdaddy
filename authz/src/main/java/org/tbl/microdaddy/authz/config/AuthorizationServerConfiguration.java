@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
+
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -18,13 +16,12 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-import org.tbl.microdaddy.authz.jose.Jwks;
 
-import java.time.Duration;
-import java.util.UUID;
+
 
 import static java.time.Duration.ofHours;
 import static java.util.UUID.*;
+import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.REFRESH_TOKEN;
@@ -39,6 +36,7 @@ import static org.tbl.microdaddy.authz.jose.Jwks.generateRsa;
 public class AuthorizationServerConfiguration {
 
 
+
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
 
@@ -46,7 +44,7 @@ public class AuthorizationServerConfiguration {
 
         RegisteredClient writer = withId(randomUUID().toString())
                 .clientId("writer")
-                .clientSecret("writer")
+                .clientSecret(createDelegatingPasswordEncoder().encode("writer"))
                 .clientAuthenticationMethod(CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AUTHORIZATION_CODE)
                 .authorizationGrantType(REFRESH_TOKEN)
@@ -63,7 +61,7 @@ public class AuthorizationServerConfiguration {
 
         RegisteredClient reader = withId(randomUUID().toString())
                 .clientId("reader")
-                .clientSecret("reader")
+                .clientSecret(createDelegatingPasswordEncoder().encode("reader"))
                 .clientAuthenticationMethod(CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AUTHORIZATION_CODE)
                 .authorizationGrantType(REFRESH_TOKEN)
@@ -92,6 +90,5 @@ public class AuthorizationServerConfiguration {
                 .issuer("http://auth-server:9999")
                 .build();
     }
-
 
 }

@@ -7,12 +7,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(
         webEnvironment = RANDOM_PORT,
-        properties = ("eureka.client.enabled=false")
+        properties = {
+                "spring.security.oauth2.resourceserver.jwt.jwk-set-uri=some-url",
+                "eureka.client.enabled=false"
+        }
 )
 class GatewayApplicationTest {
 
     @Test
-    void testLoadBalancedWebClientBuilder() {
-    }
+    void testLoadBalancedWebClientBuilder() { }
 
 }

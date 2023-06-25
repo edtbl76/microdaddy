@@ -10,9 +10,11 @@ app:
   eureka-username: username
   eureka-password: password
   eureka-server: localhost
+  auth-server: localhost
 
 spring:
   application.name: gateway
+  security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
   cloud:
     gateway:
       routes:
@@ -20,10 +22,26 @@ spring:
           uri: lb://product-composite
           predicates:
             - Path=/product-composite/**
+        - id: oauth2-server
+          uri: lb://auth-server
+          predicates:
+            - Path=/oauth2/**
+        - id: oauth2-login
+          uri: lb://auth-server
+          predicates:
+            - Path=/login/**
+        - id: oauth2-error
+          uri: lb://auth-server
+          predicates:
+            - Path=/error/**
         - id: product-composite-swagger-ui
           uri: lb://product-composite
           predicates:
             - Path=/openapi/**
+        - id: product-composite-swagger-ui-webjars
+          uri: lb://product-composite
+          predicates:
+            - Path=/webjars/**
         - id: eureka-api
           uri: http://${app.eureka-server}:8761
           predicates:
@@ -75,6 +93,7 @@ logging.level:
   root: info
   org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: info
   org.springframework.cloud.gateway: trace
+  org.springframework.web.server.adapter.HttpWebHandlerAdapter: trace
 
 management:
   endpoint:
@@ -86,4 +105,6 @@ management:
 ---
 spring.config.activate.on-profile: docker
 
-app.eureka-server: eureka
+app:
+  eureka-server: eureka
+  auth-server: auth-server

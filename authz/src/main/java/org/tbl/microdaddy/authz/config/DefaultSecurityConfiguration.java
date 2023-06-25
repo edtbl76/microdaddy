@@ -3,18 +3,23 @@ package org.tbl.microdaddy.authz.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @Slf4j
 @EnableWebSecurity
+@Configuration
 public class DefaultSecurityConfiguration {
 
     private static final String USERNAME = "username";
@@ -24,6 +29,7 @@ public class DefaultSecurityConfiguration {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers("/actuator/**").permitAll()
@@ -35,11 +41,26 @@ public class DefaultSecurityConfiguration {
 
     @Bean
     UserDetailsService users() {
-       return new InMemoryUserDetailsManager(User.builder()
+        UserDetails userDetails = User.builder()
                 .username(USERNAME)
-                .password(new BCryptPasswordEncoder().encode(PASSWORD))
+                .password(passwordEncoder().encode(PASSWORD))
                 .roles(ROLE)
-                .build());
+                .build();
+
+        log.info(userDetails.getPassword());
+        log.info(userDetails.getPassword());
+        log.info(userDetails.getPassword());
+        log.info(userDetails.getPassword());
+        log.info(userDetails.getPassword());
+
+       return new InMemoryUserDetailsManager(userDetails);
 
     }
+
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return createDelegatingPasswordEncoder();
+    }
+
 }
