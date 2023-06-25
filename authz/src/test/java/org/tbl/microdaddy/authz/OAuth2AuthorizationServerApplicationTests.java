@@ -21,8 +21,8 @@ class OAuth2AuthorizationServerApplicationTests {
     @Autowired
     MockMvc mockMvc;
 
-    @Test
     @Disabled
+    @Test
     void requestTokenUsingClientCredentialsGrantType() throws Exception {
 
         this.mockMvc.perform(post("/oauth2/token")

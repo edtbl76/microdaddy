@@ -2,6 +2,10 @@ package org.tbl.microdaddy.composite.product.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.RestController;
 import org.tbl.microdaddy.api.composite.product.ProductAggregate;
 import org.tbl.microdaddy.api.composite.product.ProductCompositeService;
@@ -14,15 +18,20 @@ import org.tbl.microdaddy.api.core.review.Review;
 import org.tbl.microdaddy.util.http.ServiceUtil;
 import reactor.core.publisher.Mono;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.logging.Level.FINE;
+import static org.springframework.security.core.context.ReactiveSecurityContextHolder.getContext;
 
 @Slf4j
 @RestController
 public class ProductCompositeServiceImpl implements ProductCompositeService {
 
+    private static final String NO_JWT_TESTING_MSG = "No JWT based Authentication supplied. Are we running tests??";
+
+    private final SecurityContext nullSecurityContext = new SecurityContextImpl();
     private final ServiceUtil serviceUtil;
     private final ProductCompositeIntegration integration;
 
@@ -37,6 +46,8 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
         try {
             List<Mono> monos = new ArrayList<>();
+
+            monos.add(getLogAuthorizationInfoMono());
 
             log.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.getProductId());
 
@@ -88,10 +99,12 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         log.info("calling getCompositeProduct for product wth id: {}", productId);
 
         return Mono.zip(objects -> createProductAggregate(
-                (Product) objects[0],
-                (List<Recommendation>) objects[1],
-                (List<Review>) objects[2],
+                (SecurityContext) objects[0],
+                (Product) objects[1],
+                (List<Recommendation>) objects[2],
+                (List<Review>) objects[3],
                 serviceUtil.getServiceAddress()),
+                getSecurityContextMono(),
                 integration.getProduct(productId),
                 integration.getRecommendations(productId).collectList(),
                 integration.getReviews(productId).collectList())
@@ -107,6 +120,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
             log.debug("deleteCompositeProduct: Deletes a product aggregate for productId: {}", productId);
 
             return Mono.zip(objects -> "",
+                            getLogAuthorizationInfoMono(),
                             integration.deleteProduct(productId),
                             integration.deleteRecommendations(productId),
                             integration.deleteReviews(productId))
@@ -120,10 +134,13 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
     }
 
     private ProductAggregate createProductAggregate(
+            SecurityContext securityContext,
             Product product,
             List<Recommendation> recommendations,
             List<Review> reviews,
             String serviceAddress) {
+
+        logAuthorizationInfo(securityContext);
 
         // product info
         int productId = product.getProductId();
@@ -173,5 +190,47 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                 recommendationSummaries,
                 reviewSummaries,
                 serviceAddresses);
+    }
+
+    private Mono<SecurityContext> getLogAuthorizationInfoMono() {
+        return getSecurityContextMono().doOnNext(this::logAuthorizationInfo);
+    }
+
+    private Mono<SecurityContext> getSecurityContextMono() {
+        return getContext().defaultIfEmpty(nullSecurityContext);
+    }
+
+    // Hard to read, but quite nice if it becomes part of the lexicon.
+    private void logAuthorizationInfo(SecurityContext securityContext) {
+        if (securityContext != null
+                && securityContext.getAuthentication() != null
+                && securityContext.getAuthentication() instanceof JwtAuthenticationToken jwtAuthenticationToken) {
+
+            Jwt token = jwtAuthenticationToken.getToken();
+            logAuthorizationInfo(token);
+        } else {
+            log.warn(NO_JWT_TESTING_MSG);
+        }
+    }
+
+    private void logAuthorizationInfo(Jwt jwt) {
+        if (jwt == null) {
+            log.warn(NO_JWT_TESTING_MSG);
+        } else {
+            if (log.isDebugEnabled()) {
+                URL issuer = jwt.getIssuer();
+                List<String> audience = jwt.getAudience();
+                Object subject = jwt.getSubject();
+                Object scopes = jwt.getClaims().get("scope");
+                Object expires = jwt.getExpiresAt();
+
+                log.debug("Authorization info: Subject: {}, scopes: {}, expires: {}, issuer: {}, audience: {}",
+                        subject,
+                        scopes,
+                        expires,
+                        issuer,
+                        audience);
+            }
+        }
     }
 }

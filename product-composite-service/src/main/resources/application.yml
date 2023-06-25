@@ -1,5 +1,14 @@
 springdoc:
-  swagger-ui.path: /openapi/swagger-ui.html
+  swagger-ui:
+    path: /openapi/swagger-ui.html
+    oauth2-redirect-url: https://localhost:8443/webjars/swagger-ui/oauth2-redirect.html
+    oauth:
+      client-id: writer
+      client-secret: writer
+      use-basic-authentication-with-access-code-grant: true
+  oAuthFlow:
+    authorizationUrl: https://localhost:8443/oauth2/authorize
+    tokenUrl: https://localhost:8443/oauth2/token
   api-docs.path: /openapi/v3/api-docs
   packagesToScan: org.tbl.microdaddy.composite.product
   pathsToMatch: /**
@@ -78,12 +87,14 @@ app:
   eureka-username: username
   eureka-password: password
   eureka-server: localhost
+  auth-server: localhost
 
 
 spring:
 #  TODO remove this at some point.
   main.allow-circular-references: true
   application.name: product-composite
+  security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
   cloud.stream:
     default-binder: rabbit
     bindings:
@@ -124,6 +135,7 @@ eureka:
 logging.level:
     root: info
     org.tbl.microdaddy: debug
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: trace
 
 management:
   endpoint.health.show-details: always
@@ -139,6 +151,7 @@ server.port: 8080
 
 app:
   eureka-server: eureka
+  auth-server: auth-server
 
 ---
 spring:
