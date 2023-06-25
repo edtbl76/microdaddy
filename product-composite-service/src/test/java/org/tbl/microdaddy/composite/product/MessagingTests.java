@@ -34,12 +34,12 @@ import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
 import static org.tbl.microdaddy.composite.product.IsSameEvent.sameEventExceptCreatedAt;
 import static reactor.core.publisher.Mono.just;
 
-//TODO "wait it out", there is a circular dependency breaking these tests.
-@Disabled
 @Slf4j
 @SpringBootTest(
         webEnvironment = RANDOM_PORT,
+        classes = {TestSecurityConfiguration.class},
         properties = {
+                "spring.security.oauth2.resourceserver.jwt.issuer-uri=",
                 "spring.main.allow-bean-definition-overriding=true",
                 "eureka.client.enabled=false"
         }
