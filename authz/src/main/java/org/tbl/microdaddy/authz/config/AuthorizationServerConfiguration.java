@@ -40,7 +40,7 @@ public class AuthorizationServerConfiguration {
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
 
-         log.info("register OAuth client allowing all grant flows...");
+        log.info("register OAuth client allowing all grant flows...");
 
         RegisteredClient writer = withId(randomUUID().toString())
                 .clientId("writer")

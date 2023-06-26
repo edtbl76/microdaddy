@@ -47,12 +47,6 @@ public class DefaultSecurityConfiguration {
                 .roles(ROLE)
                 .build();
 
-        log.info(userDetails.getPassword());
-        log.info(userDetails.getPassword());
-        log.info(userDetails.getPassword());
-        log.info(userDetails.getPassword());
-        log.info(userDetails.getPassword());
-
        return new InMemoryUserDetailsManager(userDetails);
 
     }

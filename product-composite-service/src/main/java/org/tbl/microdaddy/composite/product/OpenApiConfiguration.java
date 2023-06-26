@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springframework.context.annotation.Configuration;
 
 import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.OAUTH2;
 
@@ -20,4 +21,5 @@ import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.OAUTH2;
                                 @OAuthScope(name = "product:write", description = "write scope")
                         }
                 )))
+@Configuration
 public class OpenApiConfiguration {  }

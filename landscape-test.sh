@@ -2,10 +2,10 @@
 #
 # Usage:
 #
-#   HOST=localhost PORT=7000 ./landscape-test.sh
+#   HOST=localhost PORT=8443 ./landscape-test.sh
 #
 : ${HOST=localhost}
-: ${PORT=8080}
+: ${PORT=8443}
 : ${PRODUCT_ID_OK=1}
 : ${PRODUCT_ID_NOT_FOUND=13}
 : ${PRODUCT_ID_NO_RECOMMENDATIONS=113}
@@ -82,7 +82,7 @@ function waitForService() {
 function testCompositeCreated() {
 
   # Expects Product Composite for productId has been created w/ 3 recs and revs.
-  if ! assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
+  if ! assertCurl 200 "curl $AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
   then
     echo -n "FAIL"
     return 1
@@ -127,8 +127,8 @@ function recreateComposite() {
   local productId=$1
   local composite=$2
 
-  assertCurl 202 "curl -X DELETE http://$HOST:$PORT/product-composite/${productId} -s"
-  assertEqual 202 $(curl -X POST -s http://$HOST:$PORT/product-composite -H "Content-Type: application/json" --data "$composite" -w "%{http_code}")
+  assertCurl 202 "curl -X DELETE $AUTH -k https://$HOST:$PORT/product-composite/${productId} -s"
+  assertEqual 202 $(curl -X POST -s -k https://$HOST:$PORT/product-composite -H "Content-Type: application/json" -H "Authorization: Bearer $ACCESS_TOKEN" --data "$composite" -w "%{http_code}")
 }
 
 function seedTestData() {
@@ -180,55 +180,72 @@ then
   docker-compose up -d
 fi
 
-waitForService curl http://$HOST:${PORT}/actuator/health
+waitForService curl -k https://$HOST:$PORT/actuator/health
+
+ACCESS_TOKEN=$(curl -k https://writer:writer@$HOST:$PORT/oauth2/token -d grant_type=client_credentials -s | jq .access_token -r)
+echo ACCESS_TOKEN=$ACCESS_TOKEN
+AUTH="-H \"Authorization: Bearer $ACCESS_TOKEN\""
 
 # Verify Eureka/Service Discovery (All Microservices should be registered)
-assertCurl 200 "curl -H "accept:application/json" $HOST:$PORT/eureka/api/apps -s"
-assertEqual 5 $(echo $RESPONSE | jq ".applications.application | length")
+assertCurl 200 "curl -H "accept:application/json" -k https://username:password@$HOST:$PORT/eureka/api/apps -s"
+assertEqual 6 $(echo $RESPONSE | jq ".applications.application | length")
+
+echo "Writing test data..."
 
 seedTestData
 
 waitForMessageProcessing
 
 # Verify normal request. (3 recommendations, 3 reviews)
-assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
+assertCurl 200 "curl $AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
 assertEqual $PRODUCT_ID_OK $(echo $RESPONSE | jq .productId)
 assertEqual 3 $(echo $RESPONSE | jq ".recommendations | length")
 assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
 
 # Verify 404 Not Found is returned for non-existing products
-assertCurl 404 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_NOT_FOUND -s"
+assertCurl 404 "curl $AUTH -k https:://$HOST:$PORT/product-composite/$PRODUCT_ID_NOT_FOUND -s"
 assertEqual "No product found for productId: $PRODUCT_ID_NOT_FOUND" "$(echo $RESPONSE | jq -r .message)"
 
 # Verify no recommendations are returned
-assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_NO_RECOMMENDATIONS -s"
+assertCurl 200 "curl $AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_NO_RECOMMENDATIONS -s"
 assertEqual $PRODUCT_ID_NO_RECOMMENDATIONS $(echo $RESPONSE | jq .productId)
 assertEqual 0 $(echo $RESPONSE | jq ".recommendations | length")
 assertEqual 3 $(echo $RESPONSE | jq ".reviews | length")
 
 # Verify no reviews are returned
-assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PRODUCT_ID_NO_REVIEWS -s"
+assertCurl 200 "curl $AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_NO_REVIEWS -s"
 assertEqual $PRODUCT_ID_NO_REVIEWS $(echo $RESPONSE | jq .productId)
 assertEqual 3 $(echo $RESPONSE | jq ".recommendations | length")
 assertEqual 0 $(echo $RESPONSE | jq ".reviews | length")
 
 # Verify 422 (Unprocessable Entity) returned for a product Id that is out of range
-assertCurl 422 "curl http://$HOST:$PORT/product-composite/-1 -s"
+assertCurl 422 "curl $AUTH -k https://$HOST:$PORT/product-composite/-1 -s"
 assertEqual "\"Invalid productId: -1\"" "$(echo $RESPONSE | jq .message)"
 
 # Verify 400 (Bad Request) returned for a product that isn't a number
-assertCurl 400 "curl http://$HOST:$PORT/product-composite/invalidProductId -s"
+assertCurl 400 "curl $AUTH -k https://$HOST:$PORT/product-composite/invalidProductId -s"
 assertEqual "\"Type mismatch.\"" "$(echo $RESPONSE | jq .message)"
+
+# Verify that a request w/o an access token fails as 401 Unauthorized
+assertCurl 401 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
+
+# Verify that reader client can call read, but not delete
+READER_ACCESS_TOKEN=$(curl -k https://reader:reader@$HOST:$PORT/oauth2/token -d grant_type=client_credentials -s | jq .access_token -r)
+echo READER_ACCESS_TOKEN=$READER_ACCESS_TOKEN
+READER_AUTH="-H \"Authorization: Bearer $READER_ACCESS_TOKEN\""
+
+assertCurl 200 "curl $READER_AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
+assertCurl 403 "curl -X DELETE $READER_AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
 
 # Verify access to Swagger/OpenAPI URLs
 echo "Swagger/OpenAPI tests"
-assertCurl 302 "curl -s http://$HOST:$PORT/openapi/swagger-ui.html"
-assertCurl 200 "curl -sL http://$HOST:$PORT/openapi/swagger-ui.html"
-assertCurl 200 "curl -s http://$HOST:$PORT/openapi/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config"
-assertCurl 200 "curl -s http://$HOST:$PORT/openapi/v3/api-docs"
+assertCurl 302 "curl -ks https://$HOST:$PORT/openapi/swagger-ui.html"
+assertCurl 200 "curl -ksL https://$HOST:$PORT/openapi/swagger-ui.html"
+assertCurl 200 "curl -ks https://$HOST:$PORT/openapi/webjars/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config"
+assertCurl 200 "curl -ks https://$HOST:$PORT/openapi/v3/api-docs"
 assertEqual "3.0.1" "$(echo $RESPONSE | jq -r .openapi)"
-assertEqual "http://$HOST:$PORT" "$(echo $RESPONSE | jq -r .servers[].url)"
-assertCurl 200 "curl -s http://$HOST:$PORT/openapi/v3/api-docs.yaml"
+assertEqual "https://$HOST:$PORT" "$(echo $RESPONSE | jq -r .servers[].url)"
+assertCurl 200 "curl -ks https://$HOST:$PORT/openapi/v3/api-docs.yaml"
 
 
 if [[ $@ == *"stop"* ]]
