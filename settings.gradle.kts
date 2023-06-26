@@ -7,5 +7,5 @@ include(
         "api",
         "util",
         "discovery",
-        "gateway")
-include("authz")
+        "gateway",
+        "authz")
