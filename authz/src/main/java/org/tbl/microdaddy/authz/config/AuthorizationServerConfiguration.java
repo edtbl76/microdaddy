@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -16,7 +18,6 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-
 
 
 import static java.time.Duration.ofHours;
@@ -34,7 +35,6 @@ import static org.tbl.microdaddy.authz.jose.Jwks.generateRsa;
 @Configuration(proxyBeanMethods = false)
 @Import(OAuth2AuthorizationServerConfiguration.class)
 public class AuthorizationServerConfiguration {
-
 
 
     @Bean
@@ -74,6 +74,12 @@ public class AuthorizationServerConfiguration {
                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(ofHours(1)).build())
                 .build();
 
+        log.info("Client Settings: {}", reader.getClientSettings().toString());
+        log.info("Scopes: {}", reader.getScopes().toString());
+        log.info("Jwk Set URL: {}", reader.getClientSettings().getJwkSetUrl());
+        log.info("Access Token Format: {}",reader.getTokenSettings().getAccessTokenFormat().toString());
+        log.info("Token Settings: {}", reader.getTokenSettings().toString());
+        log.info("ID Token SigAlg: {} ", reader.getTokenSettings().getIdTokenSignatureAlgorithm().toString());
         return new InMemoryRegisteredClientRepository(writer, reader);
     }
 
@@ -90,5 +96,7 @@ public class AuthorizationServerConfiguration {
                 .issuer("http://auth-server:9999")
                 .build();
     }
+
+
 
 }

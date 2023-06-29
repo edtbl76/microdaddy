@@ -28,6 +28,7 @@ public class DefaultSecurityConfiguration {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
@@ -35,6 +36,7 @@ public class DefaultSecurityConfiguration {
                                 .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(withDefaults());
+
 
         return http.build();
     }

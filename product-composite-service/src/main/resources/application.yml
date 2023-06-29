@@ -121,6 +121,10 @@ spring:
     port: 5672
     username: guest
     password: guest
+    ## set to true to debug security WebFlux headers.
+  codec:
+    log-request-details: true
+
 
 eureka:
   client:

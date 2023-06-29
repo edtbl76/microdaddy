@@ -115,9 +115,9 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
     @Override
     public Mono<Void> deleteProduct(int productId) {
-
         try {
             log.debug("deleteCompositeProduct: Deletes a product aggregate for productId: {}", productId);
+
 
             return Mono.zip(objects -> "",
                             getLogAuthorizationInfoMono(),
@@ -224,12 +224,17 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                 Object scopes = jwt.getClaims().get("scope");
                 Object expires = jwt.getExpiresAt();
 
+
                 log.debug("Authorization info: Subject: {}, scopes: {}, expires: {}, issuer: {}, audience: {}",
                         subject,
                         scopes,
                         expires,
                         issuer,
                         audience);
+
+//                  set for debugging.
+                log.debug("JWT Headers: {}", jwt.getHeaders());
+                log.debug("JWT Claims: {}", jwt.getClaims());
             }
         }
     }

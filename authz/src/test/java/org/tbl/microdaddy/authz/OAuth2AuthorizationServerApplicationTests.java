@@ -27,15 +27,14 @@ class OAuth2AuthorizationServerApplicationTests {
 
         this.mockMvc.perform(post("/oauth2/token")
                 .param("grant_type", "client_credentials")
-                .header("Authorization", "Basic cmVhZGVyOnNlY3JldA=="))
+                .header("Authorization", "Bearer cmVhZGVyOnNlY3JldA=="))
                 .andExpect(status().isOk());
 
     }
 
-    @Disabled
     @Test
     void requestOpenIdConfiguration() throws Exception {
-        this.mockMvc.perform(get("/.well-known/openid-configuration"))
+        this.mockMvc.perform(get("/.well-known/oauth-authorization-server"))
                 .andExpect(status().isOk());
     }
 

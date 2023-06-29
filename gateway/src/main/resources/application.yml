@@ -13,6 +13,9 @@ app:
   auth-server: localhost
 
 spring:
+  ## set to true to debug security WebFlux headers.
+  codec:
+    log-request-details: true
   application.name: gateway
   security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
   cloud:

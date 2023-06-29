@@ -25,6 +25,7 @@ eureka:
 
 logging.level:
   root: info
+#  org.springframework.security: trace
 
 management:
   endpoint.health.show-details: always

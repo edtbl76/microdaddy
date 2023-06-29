@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
-@SecurityRequirement(name="security-auth")
+@SecurityRequirement(name="security_auth")
 @Tag(name = "ProductComposite", description = "REST API for composite product information.")
 public interface ProductCompositeService {
 
