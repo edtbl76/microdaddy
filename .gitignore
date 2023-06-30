@@ -43,3 +43,4 @@ bin/
 /structure101-settings.java.hsw
 **/.idea
 /url
+!/auth0/env.bash

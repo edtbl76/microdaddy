@@ -24,10 +24,9 @@ public class SecurityConfiguration {
                         .pathMatchers("/openapi/**").permitAll()
                         .pathMatchers("/webjars/**").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
-//                        .pathMatchers(POST, "/product-composite/**").hasAuthority("SCOPE_product:write")
-//                        .pathMatchers(DELETE, "/product-composite/**").hasAuthority("SCOPE_product:write")
-//                        .pathMatchers(GET, "/product-composite/**").hasAuthority("SCOPE_product:read")
-                        .pathMatchers("/product-composite/**").permitAll()
+                        .pathMatchers(POST, "/product-composite/**").hasAuthority("SCOPE_product:write")
+                        .pathMatchers(DELETE, "/product-composite/**").hasAuthority("SCOPE_product:write")
+                        .pathMatchers(GET, "/product-composite/**").hasAuthority("SCOPE_product:read")
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(withDefaults()));
         return http.build();

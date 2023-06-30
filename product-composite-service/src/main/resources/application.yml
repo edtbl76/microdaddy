@@ -94,7 +94,7 @@ spring:
 #  TODO remove this at some point.
   main.allow-circular-references: true
   application.name: product-composite
-  security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
+  security.oauth2.resourceserver.jwt.issuer-uri: https://dev-k26mww20c882irv6.us.auth0.com/
   cloud.stream:
     default-binder: rabbit
     bindings:

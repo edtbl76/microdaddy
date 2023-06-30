@@ -183,7 +183,23 @@ fi
 
 waitForService curl -k https://$HOST:$PORT/actuator/health
 
-ACCESS_TOKEN=$(curl -k https://writer:writer@$HOST:$PORT/oauth2/token -d grant_type=client_credentials -s -d scope="product:write product:read" |  jq .access_token -r)
+## Auth 0 Writer Test
+export TENANT=dev-k26mww20c882irv6.us.auth0.com
+export WRITER_CLIENT_ID=3LaCLHUpKZuhorx2YDCl6PngHszDvUTx
+export WRITER_CLIENT_SECRET=ODPnHvoF8Do3ltyAE6BKV6P8KZrsbx88qTOcSjnH3X0qrnb9mVYzXTpb0PFkZxRi
+
+# Spring Authorization Server Token
+#ACCESS_TOKEN=$(curl -k https://writer:writer@$HOST:$PORT/oauth2/token -d grant_type=client_credentials -s -d scope="product:write product:read" |  jq .access_token -r)
+
+# Auth0 Token
+ACCESS_TOKEN=$(curl -X POST https://${TENANT}/oauth/token \
+-d grant_type=client_credentials \
+-d audience=https://localhost:8443/product-composite \
+-d scope=product:read+product:write \
+-d client_id=$WRITER_CLIENT_ID \
+-d client_secret=$WRITER_CLIENT_SECRET -s | jq -r .access_token)
+
+
 echo ACCESS_TOKEN=$ACCESS_TOKEN
 AUTH="-H \"Authorization: Bearer $ACCESS_TOKEN\""
 
@@ -230,13 +246,27 @@ assertEqual "\"Type mismatch.\"" "$(echo $RESPONSE | jq .message)"
 # Verify that a request w/o an access token fails as 401 Unauthorized
 assertCurl 401 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
 
-# Verify that reader client can call read, but not delete
-READER_ACCESS_TOKEN=$(curl -k https://reader:reader@$HOST:$PORT/oauth2/token -d grant_type=client_credentials -d scope="product:read" -s | jq .access_token -r)
+# Setup Reader
+export READER_CLIENT_ID=yQ5EG69olw85TxCbspezygPik4DLuDEV
+export READER_CLIENT_SECRET=FH8gMe5Lm8NVzBM4PEHm2MjfZrhhaj0J459zxbprbXQzmmyMuivNnG4u4RFFUJxE
+
+# Spring Authorization Server Access Token
+#READER_ACCESS_TOKEN=$(curl -k https://reader:reader@$HOST:$PORT/oauth2/token -d grant_type=client_credentials -d scope="product:read" -s | jq .access_token -r)
+
+# Auth0 Access Token
+READER_ACCESS_TOKEN=$(curl -X POST https://$TENANT/oauth/token \
+-d grant_type=client_credentials \
+-d audience=https://localhost:8443/product-composite \
+-d scope=product:read \
+-d client_id=$READER_CLIENT_ID \
+-d client_secret=$READER_CLIENT_SECRET -s | jq -r .access_token)
+
 echo READER_ACCESS_TOKEN=$READER_ACCESS_TOKEN
 READER_AUTH="-H \"Authorization: Bearer $READER_ACCESS_TOKEN\""
 
+# Verify that reader client can call read, but not delete
 assertCurl 200 "curl $READER_AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
-#assertCurl 403 "curl -X DELETE $READER_AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
+assertCurl 403 "curl -X DELETE $READER_AUTH -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK -s"
 
 # Verify access to Swagger/OpenAPI URLs
 echo "Swagger/OpenAPI tests"

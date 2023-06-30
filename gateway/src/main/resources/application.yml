@@ -17,7 +17,7 @@ spring:
   codec:
     log-request-details: true
   application.name: gateway
-  security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
+  security.oauth2.resourceserver.jwt.issuer-uri: https://dev-k26mww20c882irv6.us.auth0.com/
   cloud:
     gateway:
       routes:
