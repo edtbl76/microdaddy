@@ -19,7 +19,6 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
-
     implementation("org.springframework.cloud:spring-cloud-starter-config:4.0.3")
     implementation("org.springframework.retry:spring-retry:2.0.2")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.3")
