@@ -207,6 +207,14 @@ AUTH="-H \"Authorization: Bearer $ACCESS_TOKEN\""
 assertCurl 200 "curl -H "accept:application/json" -k https://username:password@$HOST:$PORT/eureka/api/apps -s"
 assertEqual 6 $(echo $RESPONSE | jq ".applications.application | length")
 
+# Verify access to Config server and that encrypt/decrypt endpoints work
+assertCurl 200 "curl -H "accept:application/json" -k https://username:password@$HOST:$PORT/config/product/docker -s"
+TEST_VALUE="hello world"
+ENCRYPTED_VALUE=$(curl -k https://username:password@$HOST:$PORT/config/encrypt --data-urlencode "$TEST_VALUE" -s)
+DECRYPTED_VALUE=$(curl -k https://username:password@$HOST:$PORT/config/decrypt -d $ENCRYPTED_VALUE -s)
+assertEqual "$TEST_VALUE" "$DECRYPTED_VALUE"
+
+
 echo "Writing test data..."
 
 seedTestData

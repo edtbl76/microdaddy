@@ -1,6 +1,6 @@
 app:
   eureka-username: username
-  eureka-password: password
+  eureka-password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
   eureka-server: localhost
   auth-server: localhost
 
@@ -19,7 +19,7 @@ spring:
     host: 127.0.0.1
     port: 5672
     username: guest
-    password: guest
+    password: '{cipher}28748282115d6dfefcb2cc0ede2b1b608490db0eb58c07492aa6c024ad83d683'
   cloud:
     stream:
       kafka:

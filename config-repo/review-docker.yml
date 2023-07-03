@@ -1,6 +1,5 @@
 spring:
   datasource.url: jdbc:mysql://mysql/reviewdb
-  cloud.stream.kafka.binder.brokers: kafka
 
 server.port: 8080
 
