@@ -16,6 +16,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("mysql:mysql-connector-java:8.0.33")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

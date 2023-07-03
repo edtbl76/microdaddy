@@ -4,17 +4,18 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
 }
 
-group = "org.tbl.microdaddy.discovery"
+group = "org.tbl.microdaddy.config-server"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:4.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.glassfish.jaxb:jaxb-runtime")
+    implementation("org.springframework.cloud:spring-cloud-config-server")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
 }
 
 dependencyManagement{
@@ -26,3 +27,4 @@ dependencyManagement{
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+

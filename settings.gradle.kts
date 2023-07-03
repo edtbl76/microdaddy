@@ -9,3 +9,4 @@ include(
         "discovery",
         "gateway",
         "authz")
+include("config-server")

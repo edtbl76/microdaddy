@@ -18,6 +18,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-jose")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
     testImplementation("org.projectlombok:lombok:1.18.26")
     compileOnly("org.projectlombok:lombok")

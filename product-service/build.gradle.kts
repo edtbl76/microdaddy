@@ -17,6 +17,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
 	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")

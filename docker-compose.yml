@@ -88,6 +88,8 @@ services:
   eureka:
     build: discovery
     mem_limit: 512m
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 
   gateway:
     build: gateway
@@ -110,3 +112,13 @@ services:
       interval: 5s
       timeout: 2s
       retries: 60
+
+  config-server:
+    build: config-server
+    mem_limit: 512m
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker,native
+      - SPRING_SECURITY_USER_NAME=username
+      - SPRING_SECURITY_USER_PASSWORD=password
+    volumes:
+      - $PWD/config-repo:/config-repo
