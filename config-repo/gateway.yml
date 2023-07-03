@@ -62,7 +62,7 @@ spring:
           predicates:
             - Path=/eureka/**
         - id: config-server
-          uri: ${spring.cloud.config.uri}
+          uri: http://config-server:8888
           predicates:
             - Path=/config/**
           filters:

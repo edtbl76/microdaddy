@@ -8,5 +8,5 @@ include(
         "util",
         "discovery",
         "gateway",
-        "authz")
-include("config-server")
+        "authz",
+        "config-server")

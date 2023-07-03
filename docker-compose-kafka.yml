@@ -6,6 +6,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,streaming_instance_0,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       mongodb:
         condition: service_healthy
@@ -17,6 +19,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,streaming_instance_1,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       mongodb:
         condition: service_healthy
@@ -28,6 +32,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,streaming_instance_0,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       mongodb:
         condition: service_healthy
@@ -39,6 +45,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,streaming_instance_1,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       mongodb:
         condition: service_healthy
@@ -50,6 +58,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,streaming_instance_0,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       mysql:
         condition: service_healthy
@@ -61,6 +71,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,streaming_instance_1,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       mysql:
         condition: service_healthy
@@ -72,6 +84,8 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,streaming-partitioned,kafka
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     depends_on:
       kafka:
         condition: service_started
@@ -131,12 +145,16 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
 
   gateway:
     build: gateway
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     ports:
       - "8443:8443"
     depends_on:
@@ -146,6 +164,8 @@ services:
   auth-server:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_SERVER_USR=username
+      - CONFIG_SERVER_PWD=password
     build: authz
     mem_limit: 512m
     healthcheck:
@@ -159,6 +179,7 @@ services:
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,native
+      - ENCRYPT_KEY=my_encryption_key
       - SPRING_SECURITY_USER_NAME=username
       - SPRING_SECURITY_USER_PASSWORD=password
     volumes:
