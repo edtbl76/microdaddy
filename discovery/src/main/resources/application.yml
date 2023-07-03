@@ -1,19 +1,17 @@
-server:
-  port: 8761
+spring:
+  config:
+    import: "optional:configserver:"
+  application:
+    name: eureka-server
+  cloud:
+    config:
+      fail-fast: true
+      uri: http://localhost:8888
+      username: username
+      password: password
+      retry:
+        multiplier: 1.3
+        max-attempts: 8
+        max-interval: 5000
+        initial-interval: 1000
 
-app:
-  eureka-username: username
-  eureka-password: password
-
-eureka:
-  instance.hostname: localhost
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    service-url:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-  server:
-    wait-time-in-ms-when-sync-empty: 0
-    response-cache-update-interval-ms: 5000
-
-management.endpoints.web.exposure.include: "*"

@@ -44,3 +44,5 @@ bin/
 **/.idea
 /url
 !/auth0/env.bash
+/.env
+/auth0/env.bash

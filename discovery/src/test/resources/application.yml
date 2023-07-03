@@ -1,0 +1,3 @@
+app:
+  eureka-username: username
+  eureka-password: password

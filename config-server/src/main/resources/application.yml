@@ -7,6 +7,10 @@ spring:
       server:
         native:
           search-locations: file:${PWD}/config-repo
+  security:
+    user:
+      name: username
+      password: password
 
 management:
   endpoint:
@@ -29,7 +33,7 @@ spring:
     config:
       server:
         native:
-          search-locations: file://config-repo
+          search-locations: file:/config-repo
 
 
 
