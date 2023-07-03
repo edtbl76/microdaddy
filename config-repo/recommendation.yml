@@ -2,11 +2,6 @@ server:
   port: 7002
   error.include-message: always
 
-app:
-  eureka-username: username
-  eureka-password: password
-  eureka-server: localhost
-
 spring:
   application.name: recommendation
   data.mongodb:
@@ -16,7 +11,6 @@ spring:
   cloud:
     function.definition: messageProcessor
     stream:
-      default-binder: rabbit
       default.contentType: application/json
       bindings:
         messageProcessor-in-0:
@@ -37,25 +31,6 @@ spring:
           messageProcessor-in-0:
             consumer:
               enable-dlq: true
-        binder:
-          brokers: 127.0.0.1
-          defaultBrokerPort: 9092
-
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: guest
-    password: guest
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
-    initial-instance-info-replication-interval-seconds: 5
-    registry-fetch-interval-seconds: 5
-  instance:
-    lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 5
 
 logging:
   level:
@@ -63,8 +38,6 @@ logging:
     org.tbl.microdaddy: debug
     org.springframework.data.mongodb.core.ReactiveMongoTemplate: debug
 
-management:
-  endpoint.health.show-details: always
-  endpoints.web.exposure.include: "*"
+
 
 

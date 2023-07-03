@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    activate:
+      on-profile: docker
+    stream:
+      kafka:
+        binder:
+          brokers: kafka
+  rabbitmq:
+    host: rabbitmq
+
+
+app:
+  eureka-server: eureka
+  auth-server: auth-server

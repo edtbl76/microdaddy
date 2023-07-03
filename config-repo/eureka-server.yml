@@ -1,10 +1,6 @@
 server:
   port: 8761
 
-app:
-  eureka-username: username
-  eureka-password: password
-
 eureka:
   instance.hostname: localhost
   client:
@@ -15,5 +11,3 @@ eureka:
   server:
     wait-time-in-ms-when-sync-empty: 0
     response-cache-update-interval-ms: 5000
-
-management.endpoints.web.exposure.include: "*"

@@ -76,19 +76,10 @@ api:
           
           This means that a delete request of a non-existing product will return **200 OK**.
     
-
-
 server:
   port: 7000
   error.include-message: always
   forward-headers-strategy: framework
-
-app:
-  eureka-username: username
-  eureka-password: password
-  eureka-server: localhost
-  auth-server: localhost
-
 
 spring:
 #  TODO remove this at some point.
@@ -96,54 +87,29 @@ spring:
   application.name: product-composite
   security.oauth2.resourceserver.jwt.issuer-uri: https://dev-k26mww20c882irv6.us.auth0.com/
   cloud.stream:
-    default-binder: rabbit
     bindings:
       products-out-0:
         destination: products
         producer:
-#          use-native-encoding: true
           required-groups: auditGroup
       recommendations-out-0:
         destination: recommendations
         producer:
-#          use-native-encoding: true
           required-groups: auditGroup
       reviews-out-0:
         destination: reviews
         producer:
-#          use-native-encoding: true
           required-groups: auditGroup
-    kafka.binder:
-      brokers: 127.0.0.1
-      defaultBrokerPort: 9092
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    username: guest
-    password: guest
-    ## set to true to debug security WebFlux headers.
+  ## set to true to debug security WebFlux headers.
   codec:
     log-request-details: true
-
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
-    initial-instance-info-replication-interval-seconds: 5
-    registry-fetch-interval-seconds: 5
-  instance:
-    lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 5
 
 logging.level:
     root: info
     org.tbl.microdaddy: debug
     org.springframework.web.server.adapter.HttpWebHandlerAdapter: trace
 
-management:
-  endpoint.health.show-details: always
-  endpoints.web.exposure.include: "*"
+
 
 
 
