@@ -1,0 +1,32 @@
+server:
+  port: 9999
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: auth-server
+
+
+app:
+  eureka-username: username
+  eureka-password: password
+  eureka-server: localhost
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
+    initial-instance-info-replication-interval-seconds: 5
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 5
+
+logging.level:
+  root: info
+#  org.springframework.security: trace
+
+management:
+  endpoint.health.show-details: always
+  endpoints.web.exposure.include: "*"
