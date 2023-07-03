@@ -23,7 +23,8 @@ management:
 logging:
   level:
     root: info
-
+encrypt:
+  key: my_encryption_key
 ---
 spring:
   config:
