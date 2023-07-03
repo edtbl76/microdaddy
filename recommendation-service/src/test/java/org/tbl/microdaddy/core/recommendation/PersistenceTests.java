@@ -1,5 +1,6 @@
 package org.tbl.microdaddy.core.recommendation;
 
+import de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataMongoTest
+@DataMongoTest(
+        excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class,
+        properties = {
+                "spring.cloud.config.enabled=false"
+        })
 class PersistenceTests extends MongoDbTestBase {
 
     @Autowired
