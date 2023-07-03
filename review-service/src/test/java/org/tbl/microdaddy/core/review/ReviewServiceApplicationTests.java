@@ -29,7 +29,9 @@ import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
         properties = {
                 "spring.cloud.stream.default-binder=rabbit",
                 "logging.level.org.tbl.microdaddy=debug",
-                "eureka.client.enabled=false"
+                "eureka.client.enabled=false",
+                "spring.jpa.hibernate.ddl-auto=update",
+                "spring.cloud.config.enabled=false"
         })
 class ReviewServiceApplicationTests extends MySqlTestBase{
 

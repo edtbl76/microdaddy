@@ -1,0 +1,9 @@
+spring:
+  config.activate.on-profile: docker
+  datasource.url: jdbc:mysql://mysql/reviewdb
+  rabbitmq.host: rabbitmq
+  cloud.stream.kafka.binder.brokers: kafka
+
+server.port: 8080
+
+app.eureka-server: eureka
