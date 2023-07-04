@@ -14,6 +14,10 @@ import org.tbl.microdaddy.util.http.ServiceUtil;
 import reactor.core.publisher.Mono;
 
 
+import java.time.Duration;
+import java.util.Random;
+
+import static java.time.Duration.ofSeconds;
 import static java.util.logging.Level.FINE;
 
 @RestController
@@ -51,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<Product> getProduct(int productId) {
+    public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
 
         if (productId < 1) {
             throw new InvalidInputException("Invalid productId: " + productId);
@@ -60,6 +64,10 @@ public class ProductServiceImpl implements ProductService {
         log.info("calling getProduct for productId={}", productId);
 
         return repository.findByProductId(productId)
+                // Chaos Code
+                .map(entity -> throwErrorIfCircuitBreakerFault(entity, faultPercent))
+                .delayElement(ofSeconds(delay))
+                // Normal Code
                 .switchIfEmpty(Mono.error(new NotFoundException("No product found for productId: " + productId)))
                 .log(log.getName(), FINE)
                 .map(mapper::entityToApi)
@@ -83,5 +91,32 @@ public class ProductServiceImpl implements ProductService {
     private Product setServiceAddress(Product product) {
         product.setServiceAddress(serviceUtil.getServiceAddress());
         return product;
+    }
+
+    private ProductEntity throwErrorIfCircuitBreakerFault(ProductEntity entity, int faultPercent) {
+        if (faultPercent == 0) {
+            return entity;
+        }
+
+        int randomThreshold = getRandomNumber(1, 100);
+
+        if (faultPercent < randomThreshold) {
+            log.debug("No error occurred: {} < {}", faultPercent, randomThreshold);
+        } else {
+            log.debug("Circuit Breaker Fault: Error Occurred: {} >= {}", faultPercent, randomThreshold);
+            throw new RuntimeException("Circuit Breaker Fault!");
+        }
+
+        return entity;
+    }
+
+    private final Random randomNumberGenerator = new Random();
+
+    private int getRandomNumber(int min, int max) {
+        if (max < min) {
+            throw new IllegalArgumentException("Max must be greater than min");
+        }
+
+        return randomNumberGenerator.nextInt((max - min) + 1) + min;
     }
 }

@@ -1,6 +1,10 @@
 package org.tbl.microdaddy.composite.product.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +17,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.tbl.microdaddy.api.core.product.Product;
 import org.tbl.microdaddy.api.core.product.ProductService;
 import org.tbl.microdaddy.api.core.recommendation.Recommendation;
@@ -23,11 +28,13 @@ import org.tbl.microdaddy.api.event.Event;
 import org.tbl.microdaddy.api.exceptions.InvalidInputException;
 import org.tbl.microdaddy.api.exceptions.NotFoundException;
 import org.tbl.microdaddy.util.http.HttpErrorInfo;
+import org.tbl.microdaddy.util.http.ServiceUtil;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
 import java.io.IOException;
+import java.net.URI;
 
 import static java.util.logging.Level.FINE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -50,6 +57,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     private final Scheduler publishEventScheduler;
     private final StreamBridge streamBridge;
 
+    private final ServiceUtil serviceUtil;
 
     @Autowired
     public ProductCompositeIntegration(
@@ -58,13 +66,14 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
             @Qualifier("publishEventScheduler") @Lazy Scheduler publishEventScheduler,
             WebClient.Builder webClientBuilder,
             ObjectMapper mapper,
-            StreamBridge streamBridge) {
+            StreamBridge streamBridge,
+            ServiceUtil serviceUtil) {
 
         this.publishEventScheduler = publishEventScheduler;
         this.webClient = webClientBuilder.build();
         this.mapper = mapper;
         this.streamBridge = streamBridge;
-
+        this.serviceUtil = serviceUtil;
     }
 
 
@@ -79,9 +88,16 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
     @Override
-    public Mono<Product> getProduct(int productId) {
+    @Retry(name = "product")
+    @TimeLimiter(name = "product")
+    @CircuitBreaker(name = "product", fallbackMethod = "getProductFallbackValue")
+    public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
 
-        String url = PRODUCT_SERVICE_URL + "/product/" + productId;
+        URI url = UriComponentsBuilder
+                .fromUriString(PRODUCT_SERVICE_URL +
+                        "/product/{productId}?delay={delay}&faultPercent{faultPercent}")
+                        .build(productId, delay, faultPercent);
+
         log.debug("Calling getProduct endpoint at URL: {}", url);
 
         return webClient.get()
@@ -91,6 +107,26 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
                 .log(log.getName(), FINE)
                 .onErrorMap(WebClientResponseException.class, this::handleException);
 
+    }
+
+    private Mono<Product> getProductFallbackValue(
+            int productId, int delay, int faultPercent, CallNotPermittedException ex) {
+
+        log.warn("Creating a fail-fast product for productId = {}, delay = {}, faultPercent = {} and exception = {}",
+                productId, delay, faultPercent, ex.toString());
+
+        if (productId == 13) {
+            String errorMessage = "Product Id: " + productId + " not found in fallback cache.";
+            log.warn(errorMessage);
+            throw new NotFoundException(errorMessage);
+        }
+
+        return Mono.just(new Product(
+                productId,
+                "Fallback product" + productId,
+                productId,
+                serviceUtil.getServiceAddress()
+        ));
     }
 
     @Override
@@ -116,7 +152,9 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Recommendation> getRecommendations(int productId) {
 
-        String url = RECOMMENDATION_SERVICE_URL + "/recommendation?productId=" + productId;
+        URI url = UriComponentsBuilder
+                .fromUriString(RECOMMENDATION_SERVICE_URL + "/recommendation?productId={productId}")
+                .build(productId);
         log.debug("Calling getRecommendations endpoint on URL: {}", url);
 
         // returns an empty result so composite supports partial results if something happens during the
@@ -155,7 +193,9 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Flux<Review> getReviews(int productId) {
 
-        String url = REVIEW_SERVICE_URL + "/review?productId=" + productId;
+        URI url = UriComponentsBuilder
+                .fromUriString(REVIEW_SERVICE_URL + "/review?productId={productId}")
+                        .build(productId);
         log.debug("Calling getReviews endpoint at URL: {}", url);
 
 

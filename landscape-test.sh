@@ -10,6 +10,7 @@
 : ${PRODUCT_ID_NOT_FOUND=13}
 : ${PRODUCT_ID_NO_RECOMMENDATIONS=113}
 : ${PRODUCT_ID_NO_REVIEWS=213}
+: ${SKIP_CHAOS_TESTS=false}
 
 function assertCurl() {
 
@@ -165,12 +166,70 @@ function seedTestData() {
     recreateComposite "$PRODUCT_ID_OK" "$body"
 }
 
+function testCircuitBreaker() {
+
+  echo "Start Chaos Testing"
+
+  # First use health endpoint to verify that CB is closed
+  assertEqual "CLOSED" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+
+  # Force CB open by executing 3 slow calls --> Timeout Exception
+  # Verify that we get a 500 Internal Server Error back and a timeout related error message
+  for ((n= 0; n < 3; n++))
+  do
+      assertCurl 500 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK?delay=3 $AUTH -s"
+      message=$(echo $RESPONSE | jq -r .message)
+      assertEqual "Did not observe any item or terminal signal within 2000ms" "${message:0:57}"
+  done
+
+  # Verify CB is open
+  assertEqual "OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+
+  # Exec slow call again, and confirm its still open
+  # Verify a 200 is back, and fail fast is working
+  assertCurl 200 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK?delay=3 $AUTH -s"
+  assertEqual "Fallback product$PRODUCT_ID_OK" "$(echo $RESPONSE | jq -r .name)"
+
+  # Exec normal call and confirm its still open
+  # Verify a 200 is back, and fail fast is working
+  assertCurl 200 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK $AUTH -s"
+  assertEqual "Fallback product$PRODUCT_ID_OK" "$(echo $RESPONSE | jq -r .name)"
+
+  # Verify that 404 (Not Found) is returned for non-existing product
+  assertCurl 404 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_NOT_FOUND $AUTH -s"
+  assertEqual "Product Id: $PRODUCT_ID_NOT_FOUND not found in fallback cache." "$(echo $RESPONSE | jq -r .message)"
+
+  # Wait for CB to transition to the half open state (maximum of 10 seconds)
+  echo "Will sleep for 10 seconds waiting for the Circuit Breaker to go Half Open"
+  sleep 10
+
+  # Validate that the CB has transitioned to Half Open
+  assertEqual "HALF_OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+
+  # Close CB bu executing 3 normal calls in a row, then validate we get a 200 w/ a get() to the product db
+  for ((n = 0; n < 3; n++))
+  do
+      assertCurl 200 "curl -k https://$HOST:$PORT/product-composite/$PRODUCT_ID_OK $AUTH -s"
+      assertEqual "product name C" "$(echo $RESPONSE | jq -r .name)"
+  done
+
+  # Verify that CB is closed again
+  assertEqual "CLOSED" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+
+  # Verify that the state transitions we expected actually occurred.
+  assertEqual "CLOSED_TO_OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-3].stateTransition)"
+  assertEqual "OPEN_TO_HALF_OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-2].stateTransition)"
+  assertEqual "HALF_OPEN_TO_CLOSED" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-1].stateTransition)"
+
+}
+
 set -e
 
 echo "Starting Landscape Tests: " `date`
 
 echo "HOST=${HOST}"
 echo "PORT=${PORT}"
+echo "SKIP_CHAOS_TESTS=${SKIP_CHAOS_TESTS}"
 
 if [[ $@ == *"start"* ]]
 then
@@ -286,6 +345,10 @@ assertEqual "3.0.1" "$(echo $RESPONSE | jq -r .openapi)"
 assertEqual "https://$HOST:$PORT" "$(echo $RESPONSE | jq -r .servers[].url)"
 assertCurl 200 "curl -ks https://$HOST:$PORT/openapi/v3/api-docs.yaml"
 
+if [[ $SKIP_CHAOS_TESTS == "false" ]]
+then
+  testCircuitBreaker
+fi
 
 if [[ $@ == *"stop"* ]]
 then

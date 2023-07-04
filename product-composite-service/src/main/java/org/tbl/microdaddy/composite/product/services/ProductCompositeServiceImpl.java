@@ -94,7 +94,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
     }
 
     @Override
-    public Mono<ProductAggregate> getProduct(int productId) {
+    public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
 
         log.info("calling getCompositeProduct for product wth id: {}", productId);
 
@@ -105,7 +105,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                 (List<Review>) objects[3],
                 serviceUtil.getServiceAddress()),
                 getSecurityContextMono(),
-                integration.getProduct(productId),
+                integration.getProduct(productId, delay, faultPercent),
                 integration.getRecommendations(productId).collectList(),
                 integration.getReviews(productId).collectList())
                 .doOnError(ex -> log.warn("getCompositeProduct failed: {}", ex.toString()))
