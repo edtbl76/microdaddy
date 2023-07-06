@@ -1,5 +1,6 @@
 package org.tbl.microdaddy.composite.product.services;
 
+import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
@@ -49,7 +50,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
             monos.add(getLogAuthorizationInfoMono());
 
-            log.debug("createCompositeProduct: creates a new composite entity for productId: {}", body.getProductId());
+            log.info("createCompositeProduct: creates a new composite entity for productId: {}", body.getProductId());
 
             Product product = new Product(body.getProductId(), body.getName(), body.getWeight(), null);
             monos.add(integration.createProduct(product));
@@ -81,7 +82,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
             }
 
-            log.debug("createCompositeProduct: composite entities created for productId: {}", body.getProductId());
+            log.info("createCompositeProduct: composite entities created for productId: {}", body.getProductId());
 
             return Mono.zip(objects -> "", monos.toArray(new Mono[0]))
                     .doOnError(ex -> log.warn("createCompositeProduct failed: {}", ex.toString()))
@@ -93,6 +94,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         }
     }
 
+    @Observed(name = "productId", contextualName = "getting-product-id")
     @Override
     public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
 
@@ -116,7 +118,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
     @Override
     public Mono<Void> deleteProduct(int productId) {
         try {
-            log.debug("deleteCompositeProduct: Deletes a product aggregate for productId: {}", productId);
+            log.info("deleteCompositeProduct: Deletes a product aggregate for productId: {}", productId);
 
 
             return Mono.zip(objects -> "",

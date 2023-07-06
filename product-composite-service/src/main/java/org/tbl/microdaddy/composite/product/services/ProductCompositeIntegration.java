@@ -98,7 +98,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
                         "/product/{productId}?delay={delay}&faultPercent{faultPercent}")
                         .build(productId, delay, faultPercent);
 
-        log.debug("Calling getProduct endpoint at URL: {}", url);
+        log.info("Calling getProduct endpoint at URL: {}", url);
 
         return webClient.get()
                 .uri(url)
@@ -196,7 +196,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         URI url = UriComponentsBuilder
                 .fromUriString(REVIEW_SERVICE_URL + "/review?productId={productId}")
                         .build(productId);
-        log.debug("Calling getReviews endpoint at URL: {}", url);
+        log.info("Calling getReviews endpoint at URL: {}", url);
 
 
         // returns an empty result so composite supports partial results if something happens during the

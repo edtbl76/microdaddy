@@ -14,6 +14,28 @@ spring:
         max-attempts: 8
         max-interval: 5000
         initial-interval: 1000
+  output:
+    ansi:
+      enabled: always
 
 
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+    propagation:
+      type: w3c
+  metrics:
+    distribution:
+      percentiles-histogram:
+        greeting: true
+        http:
+          server:
+            requests: true
 
+logging:
+  level:
+    root: info
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
