@@ -42,7 +42,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         this.integration = integration;
     }
 
-    @Observed(name = "createProduct", contextualName = "productComposite#createProduct")
+    @Observed(name = "createProduct", contextualName = "product-composite-service.create-product")
     @Override
     public Mono<Void> createProduct(ProductAggregate body) {
 
@@ -51,7 +51,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
             monos.add(getLogAuthorizationInfoMono());
 
-            log.info("createCompositeProduct: creates a new composite entity for productId: {}", body.getProductId());
+            log.debug("createCompositeProduct::productId::{}::CREATING", body.getProductId());
 
             Product product = new Product(body.getProductId(), body.getName(), body.getWeight(), null);
             monos.add(integration.createProduct(product));
@@ -83,25 +83,25 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
             }
 
-            log.info("createCompositeProduct: composite entities created for productId: {}", body.getProductId());
+            log.debug("createCompositeProduct::productId::{}::CREATED", body.getProductId());
 
             return Mono.zip(objects -> "", monos.toArray(new Mono[0]))
-                    .doOnError(ex -> log.warn("createCompositeProduct failed: {}", ex.toString()))
+                    .doOnError(ex -> log.warn("createCompositeProduct::FAILED::{}", ex.toString()))
                     .then();
 
         } catch (RuntimeException ex) {
-            log.warn("createCompositeProduct failed: {}", ex.toString());
+            log.warn("createCompositeProduct::FAILED::{}", ex.toString());
             throw ex;
         }
     }
 
     @Observed(
             name = "getProduct",
-            contextualName = "productComposite#getProduct")
+            contextualName = "product-composite-service.get-product")
     @Override
     public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
 
-        log.info("calling getCompositeProduct for product wth id: {}", productId);
+        log.debug("getCompositeProduct::productId::{}", productId);
 
         return Mono.zip(objects -> createProductAggregate(
                 (SecurityContext) objects[0],
@@ -113,19 +113,19 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                 integration.getProduct(productId, delay, faultPercent),
                 integration.getRecommendations(productId).collectList(),
                 integration.getReviews(productId).collectList())
-                .doOnError(ex -> log.warn("getCompositeProduct failed: {}", ex.toString()))
+                .doOnError(ex -> log.warn("getCompositeProduct::FAILED::{}", ex.toString()))
                 .log(log.getName(), FINE);
 
     }
 
     @Observed(
             name = "deleteProduct",
-            contextualName = "productComposite#delete-product"
+            contextualName = "product-composite-service.delete-product"
     )
     @Override
     public Mono<Void> deleteProduct(int productId) {
         try {
-            log.info("deleteCompositeProduct: Deletes a product aggregate for productId: {}", productId);
+            log.debug("deleteCompositeProduct::productId::{}", productId);
 
 
             return Mono.zip(objects -> "",
@@ -133,16 +133,16 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                             integration.deleteProduct(productId),
                             integration.deleteRecommendations(productId),
                             integration.deleteReviews(productId))
-                    .doOnError(ex -> log.warn("delete failed: {}", ex.toString()))
+                    .doOnError(ex -> log.warn("deleteCompositeProduct::FAILED::{}", ex.toString()))
                     .log(log.getName(), FINE)
                     .then();
         } catch (RuntimeException ex) {
-            log.warn("deleteCompositeProduct failed: {}", ex.toString());
+            log.warn("deleteCompositeProduct::FAILED::{}", ex.toString());
             throw ex;
         }
     }
 
-    @Observed(name = "createProductAggregate", contextualName = "productComposite#create-product-aggregate")
+    @Observed(name = "createProductAggregate", contextualName = "product-composite-service.create-product-aggregate")
     private ProductAggregate createProductAggregate(
             SecurityContext securityContext,
             Product product,
@@ -235,7 +235,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
                 Object expires = jwt.getExpiresAt();
 
 
-                log.debug("Authorization info: Subject: {}, scopes: {}, expires: {}, issuer: {}, audience: {}",
+                log.debug("AuthorizationInfo: Subject: {}, scopes: {}, expires: {}, issuer: {}, audience: {}",
                         subject,
                         scopes,
                         expires,

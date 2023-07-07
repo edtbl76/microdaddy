@@ -5,6 +5,7 @@ import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,6 +78,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
 
+    @Observed(
+            name = "createProduct",
+            contextualName = "product-composite-integration.create-product"
+    )
     @Override
     public Mono<Product> createProduct(Product body) {
 
@@ -87,6 +92,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
+    @Observed(
+            name = "getProduct",
+            contextualName = "product-composite-integration.get-product"
+    )
     @Override
     @Retry(name = "product")
     @TimeLimiter(name = "product")
@@ -129,6 +138,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         ));
     }
 
+    @Observed(
+            name = "deleteProduct",
+            contextualName = "product-composite-integration.delete-product"
+    )
     @Override
     public Mono<Void> deleteProduct(int productId) {
 
@@ -139,6 +152,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
+    @Observed(
+            name = "createRecommendation",
+            contextualName = "product-composite-integration.create-recommendation"
+    )
     @Override
     public Mono<Recommendation> createRecommendation(Recommendation body) {
 
@@ -149,6 +166,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
+    @Observed(
+            name = "getRecommendations",
+            contextualName = "product-composite-integration.get-recommendations"
+    )
     @Override
     public Flux<Recommendation> getRecommendations(int productId) {
 
@@ -169,6 +190,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     }
 
 
+    @Observed(
+            name = "deleteRecommendations",
+            contextualName = "product-composite-integration.delete-recommendations"
+    )
     @Override
     public Mono<Void> deleteRecommendations(int productId) {
 
@@ -179,7 +204,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
-
+    @Observed(
+            name = "createReview",
+            contextualName = "product-composite-integration.create-review"
+    )
     @Override
     public Mono<Review> createReview(Review body) {
 
@@ -190,6 +218,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
+    @Observed(
+            name = "getReviews",
+            contextualName = "product-composite-integration.get-reviews"
+    )
     @Override
     public Flux<Review> getReviews(int productId) {
 
@@ -210,6 +242,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 
     }
 
+    @Observed(
+            name = "deleteReviews",
+            contextualName = "product-composite-integration.delete-reviews"
+    )
     @Override
     public Mono<Void> deleteReviews(int productId) {
 
@@ -219,6 +255,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
                 .then();
     }
 
+    @Observed(
+            name = "sendMessage",
+            contextualName = "product-composite-integration.send-message"
+    )
     private void sendMessage(String bindingName, Event event) {
         log.debug("Sending a {} message to {}", event.getEventType(), bindingName);
         Message message = MessageBuilder.withPayload(event)
