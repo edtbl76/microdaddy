@@ -1,10 +1,12 @@
 package org.tbl.microdaddy.core.review;
 
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,10 @@ import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORT
 @Transactional(propagation = NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = NONE)
 class PersistenceTests extends MySqlTestBase {
+
+    // stupid disable autoconfig hack for AOP/OTEL
+    @MockBean
+    private ObservationRegistry registry;
 
     @Autowired
     private ReviewRepository repository;

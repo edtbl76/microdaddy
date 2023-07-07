@@ -1,11 +1,13 @@
 package org.tbl.microdaddy.core.recommendation;
 
 import de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration;
+import io.micrometer.observation.ObservationRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.tbl.microdaddy.core.recommendation.persistence.RecommendationEntity;
@@ -29,6 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
                 "spring.cloud.config.enabled=false"
         })
 class PersistenceTests extends MongoDbTestBase {
+
+
+    // Only required a mock of the registry to pass this test.
+    @MockBean
+    private ObservationRegistry registry;
 
     @Autowired
     private RecommendationRepository repository;

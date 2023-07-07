@@ -1,5 +1,6 @@
 package org.tbl.microdaddy.core.recommendation.services;
 
+import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -20,6 +21,8 @@ import static java.util.logging.Level.FINE;
 @Slf4j
 public class RecommendationServiceImpl implements RecommendationService {
 
+    private static final String INVALID_PRODUCT_ID = "Invalid productId: ";
+
     private final RecommendationRepository repository;
     private final RecommendationMapper mapper;
     private final ServiceUtil serviceUtil;
@@ -34,11 +37,15 @@ public class RecommendationServiceImpl implements RecommendationService {
         this.serviceUtil = serviceUtil;
     }
 
+    @Observed(
+            name = "createRecommendation",
+            contextualName = "recommendation-service.create-recommendation"
+    )
     @Override
     public Mono<Recommendation> createRecommendation(Recommendation body) {
 
         if (body.getProductId() < 1) {
-            throw new InvalidInputException("Invalid productId: " + body.getProductId());
+            throw new InvalidInputException(INVALID_PRODUCT_ID + body.getProductId());
         }
 
         RecommendationEntity entity = mapper.apiToEntity(body);
@@ -51,11 +58,15 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     }
 
+    @Observed(
+            name = "getRecommendations",
+            contextualName = "recommendation-service.get-recommendations"
+    )
     @Override
     public Flux<Recommendation> getRecommendations(int productId) {
 
         if (productId < 1) {
-            throw new InvalidInputException("Invalid productId: " + productId);
+            throw new InvalidInputException(INVALID_PRODUCT_ID + productId);
         }
 
         log.info("calling getRecommendations for product with id={}", productId);
@@ -67,11 +78,15 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     }
 
+    @Observed(
+            name = "deleteRecommendations",
+            contextualName = "recommendation-service.delete-recommendations"
+    )
     @Override
     public Mono<Void> deleteRecommendations(int productId) {
 
         if (productId < 1) {
-            throw new InvalidInputException("Invalid productId: " + productId);
+            throw new InvalidInputException(INVALID_PRODUCT_ID + productId);
         }
 
         log.debug("deleteRecommendations: attempting to delete recommendations for product with productId: {}",
