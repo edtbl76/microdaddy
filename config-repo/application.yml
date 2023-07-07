@@ -38,3 +38,18 @@ management:
     web:
       exposure:
         include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+    propagation:
+      type: w3c
+  metrics:
+    distribution:
+      percentiles-histogram:
+        greeting: true
+        http:
+          server:
+            requests: true
+  # Must be configured like this.
+  zipkin.tracing.endpoint: http://zipkin:9411/api/v2/spans

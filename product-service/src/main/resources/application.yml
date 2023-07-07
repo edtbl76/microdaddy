@@ -14,4 +14,16 @@ spring:
         max-attempts: 8
         max-interval: 5000
         initial-interval: 1000
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.function.observability.ObservationAutoConfiguration
+      - org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.JvmMetricsAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.SystemMetricsAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.LogbackMetricsAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.web.tomcat.TomcatMetricsAutoConfiguration
+      - org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.startup.StartupTimeMetricsListenerAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.observation.batch.BatchObservationAutoConfiguration
+      -
 

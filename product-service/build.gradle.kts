@@ -29,6 +29,8 @@ dependencies {
 	testImplementation("org.testcontainers:testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mongodb")
+	testImplementation("io.micrometer:micrometer-tracing-test")
+	testImplementation("io.micrometer:micrometer-observation-test")
 
 }
 

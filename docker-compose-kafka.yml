@@ -184,3 +184,14 @@ services:
       - SPRING_SECURITY_USER_PASSWORD=password
     volumes:
       - $PWD/config-repo:/config-repo
+
+  zipkin:
+    image: openzipkin/zipkin:2.24.2
+    mem_limit: 1024m
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy

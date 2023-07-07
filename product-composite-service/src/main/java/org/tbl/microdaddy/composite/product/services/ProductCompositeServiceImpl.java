@@ -42,6 +42,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         this.integration = integration;
     }
 
+    @Observed(name = "createProduct", contextualName = "productComposite#createProduct")
     @Override
     public Mono<Void> createProduct(ProductAggregate body) {
 
@@ -94,7 +95,9 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         }
     }
 
-    @Observed(name = "productId", contextualName = "getting-product-id")
+    @Observed(
+            name = "getProduct",
+            contextualName = "productComposite#getProduct")
     @Override
     public Mono<ProductAggregate> getProduct(int productId, int delay, int faultPercent) {
 
@@ -115,6 +118,10 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
     }
 
+    @Observed(
+            name = "deleteProduct",
+            contextualName = "productComposite#delete-product"
+    )
     @Override
     public Mono<Void> deleteProduct(int productId) {
         try {
@@ -135,6 +142,7 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         }
     }
 
+    @Observed(name = "createProductAggregate", contextualName = "productComposite#create-product-aggregate")
     private ProductAggregate createProductAggregate(
             SecurityContext securityContext,
             Product product,

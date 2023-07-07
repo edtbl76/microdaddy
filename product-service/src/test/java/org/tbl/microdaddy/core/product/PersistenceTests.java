@@ -1,11 +1,17 @@
 package org.tbl.microdaddy.core.product;
 
 import de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.tck.TestObservationRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.function.observability.ObservationAutoConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.tbl.microdaddy.core.product.persistence.ProductEntity;
@@ -15,15 +21,21 @@ import reactor.test.StepVerifier;
 import java.util.Objects;
 
 @DataMongoTest(
-        excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class,
+        excludeAutoConfiguration = { EmbeddedMongoAutoConfiguration.class },
         properties = {
-                "spring.cloud.config.enabled=false"
+                "spring.cloud.config.enabled=false",
         }
 )
 class PersistenceTests extends MongoDbTestBase {
 
     @Autowired
     private ProductRepository repository;
+
+    // TODO this is a hack to get past the persistence tests
+    @MockBean
+    ObservedAspectConfiguration configuration;
+    @MockBean
+    ObservationRegistry registry;
 
     private ProductEntity savedEntity;
 

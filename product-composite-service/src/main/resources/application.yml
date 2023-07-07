@@ -20,19 +20,10 @@ spring:
 
 
 management:
-  tracing:
-    sampling:
-      probability: 1.0
-    enabled: true
-    propagation:
-      type: w3c
-  metrics:
-    distribution:
-      percentiles-histogram:
-        greeting: true
-        http:
-          server:
-            requests: true
+
+# Note: This is the specific syntax required, and the host has to be updated.
+#  zipkin.tracing.endpoint: http://zipkin:9411/api/v2/spans
+
 
 logging:
   level:
