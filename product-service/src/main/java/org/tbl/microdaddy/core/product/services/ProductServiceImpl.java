@@ -1,5 +1,6 @@
 package org.tbl.microdaddy.core.product.services;
 
+import io.micrometer.observation.annotation.Observed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,6 +25,9 @@ import static java.util.logging.Level.FINE;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
+    private static final String INVALID_PRODUCT_ID = "Invalid productId: ";
+
+
     private final ServiceUtil serviceUtil;
     private final ProductRepository repository;
     private final ProductMapper mapper;
@@ -37,11 +41,15 @@ public class ProductServiceImpl implements ProductService {
 
 
 
+    @Observed(
+            name = "createProduct",
+            contextualName = "product-service.create-product"
+    )
     @Override
     public Mono<Product> createProduct(Product body) {
 
         if (body.getProductId() < 1) {
-            throw new InvalidInputException("Invalid productId: " + body.getProductId());
+            throw new InvalidInputException(INVALID_PRODUCT_ID + body.getProductId());
         }
 
         ProductEntity entity = mapper.apiToEntity(body);
@@ -55,11 +63,15 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Observed(
+            name = "getProduct",
+            contextualName = "product-service.get-product"
+    )
     @Override
     public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
 
         if (productId < 1) {
-            throw new InvalidInputException("Invalid productId: " + productId);
+            throw new InvalidInputException(INVALID_PRODUCT_ID+ productId);
         }
 
         log.info("calling getProduct for productId={}", productId);
@@ -75,11 +87,15 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::setServiceAddress);
     }
 
+    @Observed(
+            name = "deleteProduct",
+            contextualName = "product-service.delete-product"
+    )
     @Override
     public Mono<Void> deleteProduct(int productId) {
 
         if (productId < 1) {
-            throw new InvalidInputException("Invalid productId: " + productId);
+            throw new InvalidInputException(INVALID_PRODUCT_ID + productId);
         }
         log.debug("deleteProduct: attempts to delete an entity with productId: {}", productId);
 
