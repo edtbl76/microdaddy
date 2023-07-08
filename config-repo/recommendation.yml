@@ -37,7 +37,8 @@ logging:
     root: info
     org.tbl.microdaddy: debug
     org.springframework.data.mongodb.core.ReactiveMongoTemplate: debug
-
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 
 

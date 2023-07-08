@@ -42,6 +42,7 @@ logging:
     org.tbl.microdaddy: debug
     org.hibernate.sql: debug
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 

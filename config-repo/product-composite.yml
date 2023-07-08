@@ -136,11 +136,13 @@ management:
     circuitbreakers:
       enabled: true
 
-logging.level:
+logging:
+  level:
     root: info
     org.tbl.microdaddy: debug
     org.springframework.web.server.adapter.HttpWebHandlerAdapter: trace
-
+  pattern:
+      level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 
 

@@ -19,14 +19,7 @@ spring:
       enabled: always
 
 
-management:
-
-# Note: This is the specific syntax required, and the host has to be updated.
-#  zipkin.tracing.endpoint: http://zipkin:9411/api/v2/spans
-
 
 logging:
   level:
     root: info
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

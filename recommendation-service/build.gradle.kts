@@ -21,6 +21,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
     implementation("org.springframework.cloud:spring-cloud-starter-config:4.0.3")
     implementation("org.springframework.retry:spring-retry:2.0.2")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel:1.1.2")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin:1.27.0")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.3")
     implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
