@@ -17,6 +17,8 @@ dependencies {
     implementation("org.glassfish.jaxb:jaxb-runtime")
     implementation("org.springframework.cloud:spring-cloud-starter-config:4.0.3")
     implementation("org.springframework.retry:spring-retry:2.0.2")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel:1.1.2")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin:1.27.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

@@ -19,6 +19,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-oauth2-jose")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel:1.1.2")
+    implementation("io.opentelemetry:opentelemetry-exporter-zipkin:1.27.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 }

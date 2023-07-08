@@ -82,11 +82,14 @@ spring:
           filters:
             - SetPath=/501
 
-logging.level:
-  root: info
-  org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: info
-  org.springframework.cloud.gateway: trace
-  org.springframework.web.server.adapter.HttpWebHandlerAdapter: trace
+logging:
+  level:
+    root: info
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: info
+    org.springframework.cloud.gateway: trace
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: trace
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 management:
     gateway.enabled: true
