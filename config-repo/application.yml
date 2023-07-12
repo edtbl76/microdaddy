@@ -1,20 +1,12 @@
 app:
-  eureka-username: username
-  eureka-password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
-  eureka-server: localhost
   auth-server: localhost
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
-    initial-instance-info-replication-interval-seconds: 5
-    registry-fetch-interval-seconds: 5
-  instance:
-    lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 5
+server:
+  shutdown: graceful
 
 spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -34,6 +26,11 @@ management:
   endpoint:
     health:
       show-details: always
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: "*"
   endpoints:
     web:
       exposure:

@@ -1,5 +1,5 @@
 spring:
   datasource.url: jdbc:mysql://mysql/reviewdb
 
-server.port: 8080
+server.port: 80
 

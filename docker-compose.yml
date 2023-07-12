@@ -3,6 +3,7 @@ version: '2.1'
 services:
   product:
     build: product-service
+    image: microdaddy/product-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -16,6 +17,7 @@ services:
 
   recommendation:
     build: recommendation-service
+    image: microdaddy/recommendation-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -29,6 +31,7 @@ services:
 
   review:
     build: review-service
+    image: microdaddy/review-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -42,6 +45,7 @@ services:
 
   product-composite:
     build: product-composite-service
+    image: microdaddy/product-composite-service
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -93,16 +97,9 @@ services:
       timeout: 2s
       retries: 60
 
-  eureka:
-    build: discovery
-    mem_limit: 512m
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - CONFIG_SERVER_USR=username
-      - CONFIG_SERVER_PWD=password
-
   gateway:
     build: gateway
+    image: microdaddy/gateway
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -115,20 +112,22 @@ services:
         condition: service_healthy
 
   auth-server:
+    build: authz
+    image: microdaddy/auth-server
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - CONFIG_SERVER_USR=username
       - CONFIG_SERVER_PWD=password
-    build: authz
     mem_limit: 512m
     healthcheck:
-      test: [ "CMD", "curl", "-fs", "http://localhost:9999/actuator/health" ]
+      test: [ "CMD", "curl", "-fs", "http://localhost/actuator/health" ]
       interval: 5s
       timeout: 2s
       retries: 60
 
   config-server:
     build: config-server
+    image: microdaddy/config-server
     mem_limit: 512m
     environment:
       - SPRING_PROFILES_ACTIVE=docker,native
