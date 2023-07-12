@@ -31,7 +31,6 @@ import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
 @SpringBootTest(
 		webEnvironment = RANDOM_PORT,
 		properties = {
-				"eureka.client.enabled=false",
 				"spring.cloud.config.enabled=false"}
 )
 class ProductServiceApplicationTests extends MongoDbTestBase {

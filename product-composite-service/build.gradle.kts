@@ -19,7 +19,6 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-jose")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-rabbit:4.0.3")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka:4.0.3")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
     implementation("io.micrometer:micrometer-tracing-bridge-otel:1.1.2")
     implementation("io.opentelemetry:opentelemetry-exporter-zipkin:1.27.0")
     implementation("org.springframework.cloud:spring-cloud-starter-config:4.0.3")

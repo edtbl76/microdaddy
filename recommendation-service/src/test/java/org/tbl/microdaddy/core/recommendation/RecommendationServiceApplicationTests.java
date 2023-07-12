@@ -30,7 +30,6 @@ import static reactor.core.publisher.Mono.just;
 @SpringBootTest(
         webEnvironment = RANDOM_PORT,
         properties = {
-                "eureka.client.enabled=false",
                 "spring.cloud.config.enabled=false"
 
         })
