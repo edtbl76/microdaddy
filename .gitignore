@@ -39,10 +39,19 @@ bin/
 .vscode/
 
 ### Mac OS ###
-.DS_Store!/.idea/
+.DS_Store
+
+### Structure101 ###
 /structure101-settings.java.hsw
+
+### Intellij ###
 **/.idea
-/url
+
+### Auth0 ###
 !/auth0/env.bash
 /.env
 /auth0/env.bash
+
+### Helm ###
+**/charts
+Chart.lock

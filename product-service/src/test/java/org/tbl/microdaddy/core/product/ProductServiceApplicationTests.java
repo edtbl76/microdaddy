@@ -70,7 +70,6 @@ class ProductServiceApplicationTests extends MongoDbTestBase {
 				.jsonPath("$.productId").isEqualTo(productId);
 	}
 
-	@Disabled
 	@Test
 	void validateDuplicateError() {
 		int productId = 1;
