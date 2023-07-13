@@ -142,6 +142,7 @@ services:
     mem_limit: 1024m
     environment:
       - STORAGE_TYPE=mem
+      - RABBIT_ADDRESSES
     ports:
       - "9411:9411"
     depends_on:

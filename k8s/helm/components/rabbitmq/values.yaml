@@ -1,4 +1,4 @@
-fullnameOverride: mysql
+fullnameOverride: rabbitmq
 
 image:
   repository: registry.hub.docker.com/library

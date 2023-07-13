@@ -1,0 +1,85 @@
+secrets:
+
+  config-server-secrets:
+    ENCRYPT_KEY: my_encryption_key
+    SPRING_SECURITY_USER_NAME: username
+    SPRING_SECURITY_USER_PASSWORD: password
+
+  config-client-credentials:
+    CONFIG_SERVER_USR: username
+    CONFIG_SERVER_PWD: password
+
+mysql:
+  env:
+    MYSQL_ROOT_PASSWORD: rootpassword
+    MYSQL_DATABASE: reviewdb
+    MYSQL_USER: user
+    MYSQL_PASSWORD: password
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+config-server:
+  envFromSecretRefs:
+    - config-server-secrets
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+gateway:
+  envFromSecretRefs:
+    - config-client-credentials
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+auth-server:
+  envFromSecretRefs:
+    - config-client-credentials
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+product:
+  envFromSecretRefs:
+    - config-client-credentials
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+recommendation:
+  envFromSecretRefs:
+    - config-client-credentials
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+review:
+  envFromSecretRefs:
+    - config-client-credentials
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
+
+product-composite:
+  envFromSecretRefs:
+    - config-client-credentials
+  resources:
+    requests:
+      memory: 512Mi
+    limits:
+      memory: 512Mi
