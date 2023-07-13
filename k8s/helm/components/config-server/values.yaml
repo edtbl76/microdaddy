@@ -26,3 +26,10 @@ configmap:
   enabled: true
   volumeMounts:
     mountPath: /config-repo
+
+service:
+  ports:
+    - port: 8888
+      targetPort: http
+      protocol: TCP
+      name: http
