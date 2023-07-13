@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: production
+
+logging:
+  level:
+    root: warn
+

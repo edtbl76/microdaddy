@@ -6,7 +6,6 @@ include(
         "product-composite-service",
         "api",
         "util",
-        "discovery",
         "gateway",
         "authz",
         "config-server")

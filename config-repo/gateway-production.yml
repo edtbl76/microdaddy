@@ -1,0 +1,11 @@
+spring:
+  config:
+    activate:
+      on-profile: production
+
+logging:
+  level:
+    root: WARN
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: WARN
+    org.springframework.cloud.gateway: WARN
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: WARN

@@ -14,7 +14,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.2")
     implementation("org.springframework.cloud:spring-cloud-starter-config:4.0.3")
     implementation("org.springframework.retry:spring-retry:2.0.2")
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.3")

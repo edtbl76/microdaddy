@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: production
+  rabbitmq:
+    host: 172.17.0.1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
