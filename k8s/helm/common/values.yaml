@@ -41,7 +41,7 @@ configmap:
 
 resources:
   limits:
-    memory: 350Mi
+    memory: 512Mi
 
 service:
   type: ClusterIP

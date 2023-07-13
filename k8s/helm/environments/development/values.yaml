@@ -15,71 +15,32 @@ mysql:
     MYSQL_DATABASE: reviewdb
     MYSQL_USER: user
     MYSQL_PASSWORD: password
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 config-server:
   envFromSecretRefs:
     - config-server-secrets
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 gateway:
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 auth-server:
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 product:
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 recommendation:
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 review:
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
 
 product-composite:
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 512Mi
-    limits:
-      memory: 512Mi
+
