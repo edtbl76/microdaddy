@@ -41,6 +41,8 @@ review:
     - config-client-credentials
 
 product-composite:
+#  env:
+#    RESILIENCE4J_TIMELIMITER_INSTANCES_PRODUCT_TIMEOUTDURATION: 20s
   envFromSecretRefs:
     - config-client-credentials
 
