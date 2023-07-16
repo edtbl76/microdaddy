@@ -55,3 +55,4 @@ bin/
 ### Helm ###
 **/charts
 Chart.lock
+/Microdaddy.sonargraph/

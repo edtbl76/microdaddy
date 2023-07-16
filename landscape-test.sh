@@ -6,11 +6,15 @@
 #
 : ${HOST=localhost}
 : ${PORT=8443}
+: ${USE_K8S=false}
 : ${PRODUCT_ID_OK=1}
 : ${PRODUCT_ID_NOT_FOUND=13}
 : ${PRODUCT_ID_NO_RECOMMENDATIONS=113}
 : ${PRODUCT_ID_NO_REVIEWS=213}
 : ${SKIP_CHAOS_TESTS=false}
+: ${NAMESPACE=microdaddy}
+: ${CONFIG_SERVER_USR=username}
+: ${CONFIG_SERVER_PWD=password}
 
 function assertCurl() {
 
@@ -133,6 +137,9 @@ function recreateComposite() {
 }
 
 function seedTestData() {
+
+  echo "Writing test data..."
+
   body="{\"productId\":$PRODUCT_ID_NO_RECOMMENDATIONS"
   body+=\
 ',"name":"product name A","weight":100, "reviews":[
@@ -170,8 +177,15 @@ function testCircuitBreaker() {
 
   echo "Start Chaos Testing"
 
+  if [[ $USE_K8S == "false" ]]
+  then
+    EXEC="docker-compose exec -T product-composite"
+  else
+    EXEC="kubectl -n $NAMESPACE exec deploy/product-composite -- "
+  fi
+
   # First use health endpoint to verify that CB is closed
-  assertEqual "CLOSED" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+  assertEqual "CLOSED" "$($EXEC curl -s http://localhost/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
 
   # Force CB open by executing 3 slow calls --> Timeout Exception
   # Verify that we get a 500 Internal Server Error back and a timeout related error message
@@ -183,7 +197,7 @@ function testCircuitBreaker() {
   done
 
   # Verify CB is open
-  assertEqual "OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+  assertEqual "OPEN" "$($EXEC curl -s  http://localhost/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
 
   # Exec slow call again, and confirm its still open
   # Verify a 200 is back, and fail fast is working
@@ -204,7 +218,7 @@ function testCircuitBreaker() {
   sleep 10
 
   # Validate that the CB has transitioned to Half Open
-  assertEqual "HALF_OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+  assertEqual "HALF_OPEN" "$($EXEC curl -s http://localhost/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
 
   # Close CB bu executing 3 normal calls in a row, then validate we get a 200 w/ a get() to the product db
   for ((n = 0; n < 3; n++))
@@ -214,12 +228,12 @@ function testCircuitBreaker() {
   done
 
   # Verify that CB is closed again
-  assertEqual "CLOSED" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+  assertEqual "CLOSED" "$($EXEC curl -s http://localhost/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
 
   # Verify that the state transitions we expected actually occurred.
-  assertEqual "CLOSED_TO_OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-3].stateTransition)"
-  assertEqual "OPEN_TO_HALF_OPEN" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-2].stateTransition)"
-  assertEqual "HALF_OPEN_TO_CLOSED" "$(docker-compose exec -T product-composite curl -s http://product-composite:8080/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-1].stateTransition)"
+  assertEqual "CLOSED_TO_OPEN" "$($EXEC curl -s http://localhost/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-3].stateTransition)"
+  assertEqual "OPEN_TO_HALF_OPEN" "$($EXEC curl -s http://localhost/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-2].stateTransition)"
+  assertEqual "HALF_OPEN_TO_CLOSED" "$($EXEC curl -s http://localhost/actuator/circuitbreakerevents/product/STATE_TRANSITION | jq -r .circuitBreakerEvents[-1].stateTransition)"
 
 }
 
@@ -229,6 +243,7 @@ echo "Starting Landscape Tests: " `date`
 
 echo "HOST=${HOST}"
 echo "PORT=${PORT}"
+echo "USE_K8S=${USE_K8S}"
 echo "SKIP_CHAOS_TESTS=${SKIP_CHAOS_TESTS}"
 
 if [[ $@ == *"start"* ]]
@@ -262,19 +277,12 @@ ACCESS_TOKEN=$(curl -X POST https://${TENANT}/oauth/token \
 echo ACCESS_TOKEN=$ACCESS_TOKEN
 AUTH="-H \"Authorization: Bearer $ACCESS_TOKEN\""
 
-# Verify Eureka/Service Discovery (All Microservices should be registered)
-assertCurl 200 "curl -H "accept:application/json" -k https://username:password@$HOST:$PORT/eureka/api/apps -s"
-assertEqual 6 $(echo $RESPONSE | jq ".applications.application | length")
-
 # Verify access to Config server and that encrypt/decrypt endpoints work
-assertCurl 200 "curl -H "accept:application/json" -k https://username:password@$HOST:$PORT/config/product/docker -s"
+assertCurl 200 "curl -H "accept:application/json" -k https://$CONFIG_SERVER_USR:$CONFIG_SERVER_PWD@$HOST:$PORT/config/product/docker -s"
 TEST_VALUE="hello world"
-ENCRYPTED_VALUE=$(curl -k https://username:password@$HOST:$PORT/config/encrypt --data-urlencode "$TEST_VALUE" -s)
-DECRYPTED_VALUE=$(curl -k https://username:password@$HOST:$PORT/config/decrypt -d $ENCRYPTED_VALUE -s)
+ENCRYPTED_VALUE=$(curl -k https://$CONFIG_SERVER_USR:$CONFIG_SERVER_PWD@$HOST:$PORT/config/encrypt --data-urlencode "$TEST_VALUE" -s)
+DECRYPTED_VALUE=$(curl -k https://$CONFIG_SERVER_USR:$CONFIG_SERVER_PWD@$HOST:$PORT/config/decrypt -d $ENCRYPTED_VALUE -s)
 assertEqual "$TEST_VALUE" "$DECRYPTED_VALUE"
-
-
-echo "Writing test data..."
 
 seedTestData
 
