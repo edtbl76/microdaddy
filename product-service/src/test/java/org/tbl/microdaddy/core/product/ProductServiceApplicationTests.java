@@ -28,11 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.tbl.microdaddy.api.event.Event.Type.CREATE;
 import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
 
-@SpringBootTest(
-		webEnvironment = RANDOM_PORT,
-		properties = {
-				"spring.cloud.config.enabled=false"}
-)
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 class ProductServiceApplicationTests extends MongoDbTestBase {
 
 	@Autowired

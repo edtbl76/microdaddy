@@ -41,8 +41,7 @@ import static reactor.core.publisher.Mono.just;
         properties = {
                 "spring.security.oauth2.resourceserver.jwt.issuer-uri=",
                 "spring.main.allow-bean-definition-overriding=true",
-                "spring.cloud.stream.default-binder=rabbit",
-                "spring.cloud.config.enabled=false"
+                "spring.cloud.stream.default-binder=rabbit"
         }
 )
 @Import({TestChannelBinderConfiguration.class})

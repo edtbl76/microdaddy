@@ -82,6 +82,9 @@ server:
   forward-headers-strategy: framework
 
 spring:
+  output:
+    ansi:
+      enabled: always
 #  TODO remove this at some point.
   main.allow-circular-references: true
   application.name: product-composite

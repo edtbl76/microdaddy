@@ -27,12 +27,7 @@ import static org.tbl.microdaddy.api.event.Event.Type.CREATE;
 import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
 import static reactor.core.publisher.Mono.just;
 
-@SpringBootTest(
-        webEnvironment = RANDOM_PORT,
-        properties = {
-                "spring.cloud.config.enabled=false"
-
-        })
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 class RecommendationServiceApplicationTests extends MongoDbTestBase {
 
     @Autowired

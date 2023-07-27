@@ -23,11 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 import static org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED;
 
-@DataJpaTest(
-        properties = {
-                "spring.jpa.hibernate.ddl-auto=update",
-                "spring.cloud.config.enabled=false"
-        })
+@DataJpaTest(properties = {"spring.jpa.hibernate.ddl-auto=update"})
 @Transactional(propagation = NOT_SUPPORTED)
 @AutoConfigureTestDatabase(replace = NONE)
 class PersistenceTests extends MySqlTestBase {

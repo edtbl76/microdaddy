@@ -25,11 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataMongoTest(
-        excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class,
-        properties = {
-                "spring.cloud.config.enabled=false"
-        })
+@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
 class PersistenceTests extends MongoDbTestBase {
 
 

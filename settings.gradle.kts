@@ -7,5 +7,4 @@ include(
         "api",
         "util",
         "gateway",
-        "authz",
-        "config-server")
+        "authz")

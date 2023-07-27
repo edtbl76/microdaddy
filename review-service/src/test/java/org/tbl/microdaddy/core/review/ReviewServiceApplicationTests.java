@@ -29,8 +29,7 @@ import static org.tbl.microdaddy.api.event.Event.Type.DELETE;
         properties = {
                 "spring.cloud.stream.default-binder=rabbit",
                 "logging.level.org.tbl.microdaddy=debug",
-                "spring.jpa.hibernate.ddl-auto=update",
-                "spring.cloud.config.enabled=false"
+                "spring.jpa.hibernate.ddl-auto=update"
         })
 class ReviewServiceApplicationTests extends MySqlTestBase{
 
