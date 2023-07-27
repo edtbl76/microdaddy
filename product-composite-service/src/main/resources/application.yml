@@ -1,24 +1,9 @@
 spring:
-  config:
-    import: "optional:configserver:"
   application:
     name: product-composite
-  cloud:
-    config:
-      fail-fast: true
-      uri: http://localhost:8888
-      username: username
-      password: password
-      retry:
-        multiplier: 1.3
-        max-attempts: 8
-        max-interval: 5000
-        initial-interval: 1000
   output:
     ansi:
       enabled: always
-
-
 
 logging:
   level:

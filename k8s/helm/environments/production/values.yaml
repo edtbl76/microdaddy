@@ -2,11 +2,11 @@ secrets:
 
   config-server-secrets:
     ENCRYPT_KEY: my_encryption_key
-    SPRING_SECURITY_USER_NAME: production
+    SPRING_SECURITY_USER_NAME: username
     SPRING_SECURITY_USER_PASSWORD: password
 
   config-client-credentials:
-    CONFIG_SERVER_USR: production
+    CONFIG_SERVER_USR: username
     CONFIG_SERVER_PWD: password
 
 
@@ -18,11 +18,7 @@ config-server:
     MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info"
   envFromSecretRefs:
     - config-server-secrets
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
+
 
 gateway:
   image:
@@ -31,11 +27,7 @@ gateway:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
+
 
 auth-server:
   image:
@@ -44,11 +36,7 @@ auth-server:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
+
 
 product:
   image:
@@ -57,11 +45,7 @@ product:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
+
 
 recommendation:
   image:
@@ -70,11 +54,7 @@ recommendation:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
+
 
 review:
   image:
@@ -83,11 +63,6 @@ review:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
 
 product-composite:
   image:
@@ -96,18 +71,11 @@ product-composite:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - config-client-credentials
-  resources:
-    requests:
-      memory: 200Mi
-    limits:
-      memory: 400Mi
 
 zipkin-server:
   env:
     LOGGING_LEVEL_ROOT: WARN
     RABBIT_ADDRESSES: 172.17.0.1
   resources:
-    requests:
-      memory: 300Mi
     limits:
       memory: 600Mi
