@@ -1,6 +1,0 @@
-spring:
-  config.activate.on-profile: streaming_instance_1
-  cloud.stream.bindings:
-    messageProcessor-in-0:
-      consumer:
-        instance-index: 1

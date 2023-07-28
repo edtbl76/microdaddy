@@ -1,8 +1,0 @@
-spring:
-  config.activate.on-profile: kafka
-  cloud.stream:
-    default-binder: kafka
-    kafka.binder.replication-factor: 1
-  kafka.bootstrap-servers: kafka:9092
-
-management.health.rabbit.enabled: false

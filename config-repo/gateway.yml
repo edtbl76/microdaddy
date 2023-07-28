@@ -3,7 +3,7 @@ server:
   ssl:
     key-store-type: PKCS12
     key-store: classpath:keystore/edge.p12
-    key-store-password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
+#    key-store-password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
     key-alias: localhost
 
 spring:
@@ -45,14 +45,6 @@ spring:
           predicates:
             - Path=/webjars/**
 
-        - id: config-server
-          uri: http://config-server:8888
-          predicates:
-            - Path=/config/**
-          filters:
-            - RewritePath=/config/(?<segment>.*), /$\{segment}
-
-
 logging:
   level:
     root: info
@@ -64,6 +56,21 @@ logging:
 
 management:
     gateway.enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+
+logging:
+  level:
+    root: WARN
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: WARN
+    org.springframework.cloud.gateway: WARN
+    org.springframework.web.server.adapter.HttpWebHandlerAdapter: WARN
+
+
 
 
 

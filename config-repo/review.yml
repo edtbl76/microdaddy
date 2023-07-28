@@ -8,8 +8,8 @@ spring:
   jpa.hibernate.ddl-auto: update
   datasource:
     url: jdbc:mysql://localhost/reviewdb
-    username: user
-    password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
+#    username: user
+#    password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
     hikari.initialization-fail-timeout: 60000
   cloud:
     function.definition: messageProcessor
@@ -45,4 +45,45 @@ logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
+---
+spring:
+  config.activate.on-profile: docker
+  datasource.url: jdbc:mysql://mysql/reviewdb
 
+server.port: 80
+
+---
+spring.config.activate.on-profile: production
+
+spring:
+  datasource.url: jdbc:mysql://172.17.0.1:3306/reviewdb
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+logging:
+  level:
+    root: WARN
+    se.magnus: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+
+---
+spring:
+  config.activate.on-profile: streaming_instance_0
+  cloud.stream.bindings:
+    messageProcessor-in-0.consumer.instance-index: 0
+
+---
+spring:
+  config.activate.on-profile: streaming_instance_1
+  cloud.stream.bindings:
+    messageProcessor-in-0.consumer.instance-index: 1
+
+---
+spring:
+  config.activate.on-profile: streaming_partitioned
+  cloud.stream.bindings:
+    messageProcessor-in-0:
+      consumer:
+        partitioned: true
+        instance-count: 2

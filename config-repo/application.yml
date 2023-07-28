@@ -10,8 +10,8 @@ spring:
   rabbitmq:
     host: 127.0.0.1
     port: 5672
-    username: guest
-    password: '{cipher}28748282115d6dfefcb2cc0ede2b1b608490db0eb58c07492aa6c024ad83d683'
+#    username: guest
+#    password: '{cipher}28748282115d6dfefcb2cc0ede2b1b608490db0eb58c07492aa6c024ad83d683'
   cloud:
     stream:
       kafka:
@@ -50,3 +50,44 @@ management:
             requests: true
   # Must be configured like this.
   zipkin.tracing.endpoint: http://zipkin-server:9411/api/v2/spans
+
+---
+spring:
+  cloud:
+    activate:
+      on-profile: docker
+    stream:
+      kafka:
+        binder:
+          brokers: kafka
+  rabbitmq:
+    host: rabbitmq
+
+
+app:
+  auth-server: auth-server
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  rabbitmq:
+    host: 172.17.0.1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+spring:
+  config.activate.on-profile: kafka
+  cloud.stream:
+    default-binder: kafka
+    kafka.binder.replication-factor: 1
+  kafka.bootstrap-servers: kafka:9092
+
+management.health.rabbit.enabled: false
+

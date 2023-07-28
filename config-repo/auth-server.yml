@@ -9,3 +9,22 @@ spring:
 logging.level:
   root: info
 #  org.springframework.security: trace
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+server:
+  port: 80
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+
+logging:
+  level:
+    root: warn
