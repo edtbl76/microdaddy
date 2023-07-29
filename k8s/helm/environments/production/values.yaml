@@ -1,33 +1,39 @@
+ingress:
+  host: minikube.me
+  paths:
+    - path: /oauth2
+      service: auth-server
+    - path: /login
+      service: auth-server
+    - path: /error
+      service: auth-server
+    - path: /product-composite
+      service: product-composite
+    - path: /actuator/health
+      service: product-composite
+    - path: /openapi
+      service: product-composite
+    - path: /webjars
+      service: product-composite
+
 secrets:
 
-  config-server-secrets:
-    ENCRYPT_KEY: my_encryption_key
-    SPRING_SECURITY_USER_NAME: username
-    SPRING_SECURITY_USER_PASSWORD: password
+  rabbitmq-credentials:
+    SPRING_RABBITMQ_USERNAME: rabbit-user-prod
+    SPRING_RABBITMQ_PASSWORD: rabbit-pass-prod
 
-  config-client-credentials:
-    CONFIG_SERVER_USR: username
-    CONFIG_SERVER_PWD: password
+  rabbitmq-zipkin-credentials:
+    RABBIT_USER: rabbit-user-prod
+    RABBIT_PASS: rabbit-pass-prod
 
+  mongo-credentials:
+    SPRING_DATA_MONGODB_AUTHN_DATABASE: admin
+    SPRING_DATA_MONGODB_USERNAME: mongodb-user-prod
+    SPRING_DATA_MONGODB_PASSWORD: mongodb-pass-prod
 
-config-server:
-  image:
-    tag: v1
-  env:
-    LOGGING_LEVEL_ROOT: WARN
-    MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info"
-  envFromSecretRefs:
-    - config-server-secrets
-
-
-gateway:
-  image:
-    tag: v1
-  env:
-    SPRING_PROFILES_ACTIVE: "docker,production"
-  envFromSecretRefs:
-    - config-client-credentials
-
+  mysql-credentials:
+    SPRING_DATASOURCE_USERNAME: mysql-user-prod
+    SPRING_DATASOURCE_PASSWORD: mysql-pass-prod
 
 auth-server:
   image:
@@ -35,8 +41,7 @@ auth-server:
   env:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
-    - config-client-credentials
-
+    - rabbitmq-credentials
 
 product:
   image:
@@ -44,8 +49,8 @@ product:
   env:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
-    - config-client-credentials
-
+    - rabbitmq-credentials
+    - mongodb-credentials
 
 recommendation:
   image:
@@ -53,8 +58,8 @@ recommendation:
   env:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
-    - config-client-credentials
-
+    - rabbitmq-credentials
+    - mongodb-credentials
 
 review:
   image:
@@ -62,7 +67,8 @@ review:
   env:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
-    - config-client-credentials
+    - rabbitmq-credentials
+    - mysql-credentials
 
 product-composite:
   image:
@@ -70,12 +76,14 @@ product-composite:
   env:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
-    - config-client-credentials
+    - rabbitmq-credentials
 
 zipkin-server:
   env:
     LOGGING_LEVEL_ROOT: WARN
     RABBIT_ADDRESSES: 172.17.0.1
+  envFromSecretRefs:
+    - rabbitmq-zipkin-credentials
   resources:
     limits:
       memory: 600Mi

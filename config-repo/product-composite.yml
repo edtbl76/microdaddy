@@ -3,7 +3,7 @@ springdoc:
     path: /openapi/swagger-ui.html
     oauth2-redirect-url: https://localhost:8443/webjars/swagger-ui/oauth2-redirect.html
     oauth:
-#      client-id: writer
+      client-id: writer
 #      client-secret: '{cipher}63ab6a91be8d402fc9af0912f1da232792bdf703654c2ec2eb534fe43083763c'
       use-basic-authentication-with-access-code-grant: true
   oAuthFlow:
