@@ -30,11 +30,11 @@ secrets:
     RABBIT_USER: rabbit-user-dev
     RABBIT_PASS: rabbit-pass-dev
 
-  mongo-server-credentials:
+  mongodb-server-credentials:
     MONGO_INITDB_ROOT_USERNAME: mongodb-user-dev
     MONGO_INITDB_ROOT_PASSWORD: mongodb-pass-dev
 
-  mongo-credentials:
+  mongodb-credentials:
     SPRING_DATA_MONGODB_AUTHN_DATABASE: admin
     SPRING_DATA_MONGODB_USERNAME: mongodb-user-dev
     SPRING_DATA_MONGODB_PASSWORD: mongodb-pass-dev
