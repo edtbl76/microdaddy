@@ -8,6 +8,7 @@ spring:
       host: localhost
       port: 27017
       database: recommendationdb
+      authentication-database: admin
   cloud:
     function.definition: messageProcessor
     stream:

@@ -9,6 +9,7 @@ spring:
       port: 27017
       database: productdb
       auto-index-creation: true
+      authentication-database: admin
   cloud:
     function.definition: messageProcessor
     stream:

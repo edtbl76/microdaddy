@@ -28,7 +28,7 @@ management:
         enabled: true
       group:
         readiness:
-          include: rabbit,db,mongo
+          include: "*"
   endpoints:
     web:
       exposure:
