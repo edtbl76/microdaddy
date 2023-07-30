@@ -8,8 +8,6 @@ spring:
   jpa.hibernate.ddl-auto: update
   datasource:
     url: jdbc:mysql://localhost/reviewdb
-#    username: user
-#    password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
     hikari.initialization-fail-timeout: 60000
   cloud:
     function.definition: messageProcessor

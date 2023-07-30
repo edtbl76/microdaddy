@@ -8,7 +8,7 @@ image:
 
 env:
   STORAGE_TYPE: mem
-  RABBIT_ADDRESSES: rabbitmq
+#  RABBIT_ADDRESSES: rabbitmq
 
 ports:
   - containerPort: 9411

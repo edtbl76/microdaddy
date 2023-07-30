@@ -3,7 +3,6 @@ server:
   ssl:
     key-store-type: PKCS12
     key-store: classpath:keystore/edge.p12
-#    key-store-password: '{cipher}32cb5f48e9b150ad60ce99555529f4b2187ae026b5b9548414588f6f4a24155c'
     key-alias: localhost
 
 spring:

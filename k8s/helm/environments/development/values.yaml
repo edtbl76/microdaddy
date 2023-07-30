@@ -26,16 +26,16 @@ secrets:
     SPRING_RABBITMQ_USERNAME: rabbit-user-dev
     SPRING_RABBITMQ_PASSWORD: rabbit-pass-dev
 
-  rabbitmq-zipkin-credentials:
-    RABBIT_USER: rabbit-user-dev
-    RABBIT_PASS: rabbit-pass-dev
+#  rabbitmq-zipkin-credentials:
+#    RABBIT_USER: rabbit-user-dev
+#    RABBIT_PASS: rabbit-pass-dev
 
   mongodb-server-credentials:
     MONGO_INITDB_ROOT_USERNAME: mongodb-user-dev
     MONGO_INITDB_ROOT_PASSWORD: mongodb-pass-dev
 
   mongodb-credentials:
-    SPRING_DATA_MONGODB_AUTHN_DATABASE: admin
+    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
     SPRING_DATA_MONGODB_USERNAME: mongodb-user-dev
     SPRING_DATA_MONGODB_PASSWORD: mongodb-pass-dev
 
@@ -43,7 +43,7 @@ secrets:
     MYSQL_ROOT_PASSWORD: rootpassword
     MYSQL_DATABASE: reviewdb
     MYSQL_USER: mysql-user-dev
-    MYSQL_PASS: mysql-pass-dev
+    MYSQL_PASSWORD: mysql-pass-dev
 
   mysql-credentials:
     SPRING_DATASOURCE_USERNAME: mysql-user-dev
@@ -86,7 +86,7 @@ product-composite:
   envFromSecretRefs:
     - rabbitmq-credentials
 
-zipkin-server:
-  envFromSecretRefs:
-    - rabbitmq-zipkin-credentials
+#zipkin-server:
+#  envFromSecretRefs:
+#    - rabbitmq-zipkin-credentials
 

@@ -10,8 +10,6 @@ spring:
   rabbitmq:
     host: 127.0.0.1
     port: 5672
-#    username: guest
-#    password: '{cipher}28748282115d6dfefcb2cc0ede2b1b608490db0eb58c07492aa6c024ad83d683'
   cloud:
     stream:
       kafka:
@@ -30,7 +28,7 @@ management:
         enabled: true
       group:
         readiness:
-          include: "*"
+          include: rabbit,db,mongo
   endpoints:
     web:
       exposure:
