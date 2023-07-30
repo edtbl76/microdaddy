@@ -31,7 +31,8 @@ public class ProductServiceApplication {
 
 		String mongoDbHost = context.getEnvironment().getProperty("spring.data.mongodb.host");
 		String mongoDbPort = context.getEnvironment().getProperty("spring.data.mongodb.port");
-		log.info("Connected to MongoDB: " + mongoDbHost + ":" + mongoDbPort);
+		String mongoDBAuthSource = context.getEnvironment().getProperty("spring.data.mongodb.authentication-database");
+		log.info("Connected to MongoDB: " + mongoDbHost + ":" + mongoDbPort + ", " + mongoDBAuthSource);
 
 	}
 	@Autowired

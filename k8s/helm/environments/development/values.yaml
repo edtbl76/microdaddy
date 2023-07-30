@@ -35,7 +35,7 @@ secrets:
     MONGO_INITDB_ROOT_PASSWORD: mongodb-pass-dev
 
   mongodb-credentials:
-    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+#    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
     SPRING_DATA_MONGODB_USERNAME: mongodb-user-dev
     SPRING_DATA_MONGODB_PASSWORD: mongodb-pass-dev
 

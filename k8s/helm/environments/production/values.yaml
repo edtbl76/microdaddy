@@ -27,7 +27,7 @@ secrets:
 #    RABBIT_PASS: rabbit-pass-prod
 #
   mongodb-credentials:
-    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+#    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
     SPRING_DATA_MONGODB_USERNAME: mongodb-user-prod
     SPRING_DATA_MONGODB_PASSWORD: mongodb-pass-prod
 

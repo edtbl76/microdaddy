@@ -7,9 +7,9 @@ spring:
   data.mongodb:
       host: localhost
       port: 27017
+      authentication-database: admin
       database: productdb
       auto-index-creation: true
-      authentication-database: admin
   cloud:
     function.definition: messageProcessor
     stream:
