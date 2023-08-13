@@ -5,11 +5,14 @@ server:
 spring:
   application.name: product
   data.mongodb:
-      host: localhost
-      port: 27017
-      authentication-database: admin
-      database: productdb
+#      host: localhost
+#      port: 27017
+#      authentication-database: admin
+#      database: productdb
       auto-index-creation: true
+      uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@localhost:27017/productDB?authSource=admin
+#      username: ${SPRING_DATA_MONGODB_USERNAME}
+#      password: ${SPRING_DATA_MONGODB_PASSWORD}
   cloud:
     function.definition: messageProcessor
     stream:
@@ -49,7 +52,9 @@ spring:
   config:
     activate:
       on-profile: docker
-  data.mongodb.host: mongodb
+  data.mongodb:
+    uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@mongodb:27017/productDB?authSource=admin
+
 
 server.port: 80
 

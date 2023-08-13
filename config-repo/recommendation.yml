@@ -5,10 +5,11 @@ server:
 spring:
   application.name: recommendation
   data.mongodb:
-      host: localhost
-      port: 27017
+#      host: localhost
+#      port: 27017
 #      authentication-database: admin
-      database: recommendationdb
+#      database: recommendationdb
+      uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@localhost:27017/productDB?authSource=admin
   cloud:
     function.definition: messageProcessor
     stream:
@@ -44,8 +45,8 @@ logging:
 ---
 spring:
   config.activate.on-profile: docker
-  data.mongodb.host: mongodb
-
+#  data.mongodb.host: mongodb
+  data.mongodb.uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@mongodb:27017/productDB?authSource=admin
 server.port: 80
 
 ---
