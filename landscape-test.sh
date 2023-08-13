@@ -183,7 +183,7 @@ function testCircuitBreaker() {
   fi
 
   # First use health endpoint to verify that CB is closed
-  assertEqual "CLOSED" "$($EXEC curl -s http://localhost/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
+  assertEqual "CLOSED" "$($EXEC curl -s -vvv http://localhost/actuator/health | jq -r .components.circuitBreakers.details.product.details.state)"
 
   # Force CB open by executing 3 slow calls --> Timeout Exception
   # Verify that we get a 500 Internal Server Error back and a timeout related error message
