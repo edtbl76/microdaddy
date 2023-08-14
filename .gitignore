@@ -49,10 +49,13 @@ bin/
 
 ### Auth0 ###
 !/auth0/env.bash
-/.env
 /auth0/env.bash
 
 ### Helm ###
 **/charts
 Chart.lock
 /Microdaddy.sonargraph/
+
+### Docker ###
+.env
+.env-prod
