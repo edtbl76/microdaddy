@@ -57,5 +57,6 @@ Chart.lock
 /Microdaddy.sonargraph/
 
 ### Docker ###
+.env-dev
 .env
-.env-prod
+.env-dev

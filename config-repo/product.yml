@@ -10,7 +10,7 @@ spring:
 #      authentication-database: admin
 #      database: productdb
       auto-index-creation: true
-      uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@localhost:27017/productDB?authSource=admin
+      uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@localhost:27017/productdb?authSource=admin
 #      username: ${SPRING_DATA_MONGODB_USERNAME}
 #      password: ${SPRING_DATA_MONGODB_PASSWORD}
   cloud:
@@ -53,7 +53,7 @@ spring:
     activate:
       on-profile: docker
   data.mongodb:
-    uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@mongodb:27017/productDB?authSource=admin
+    uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@mongodb:27017/productdb?authSource=admin
 
 
 server.port: 80
@@ -61,7 +61,7 @@ server.port: 80
 ---
 spring.config.activate.on-profile: production
 
-spring.data.mongodb.host: 172.17.0.1
+spring.data.mongodb.uri: mongodb://${SPRING_DATA_MONGODB_USERNAME}:${SPRING_DATA_MONGODB_PASSWORD}@172.17.0.1:27017/productdb?authSource=admin
 
 logging:
   level:

@@ -99,9 +99,9 @@ services:
       - "3306:3306"
     environment:
     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PWD}
-    - MYSQL_DATABASE=review-db
+    - MYSQL_DATABASE=reviewdb
     - MYSQL_USER=${MYSQL_USR}
-    - MYSQL_PASS=${MYSQL_PWD}
+    - MYSQL_PASSWORD=${MYSQL_PWD}
     healthcheck:
       test: "/usr/bin/mysql --user=${MYSQL_USR} --password=${MYSQL_PWD} --execute \"SHOW DATABASES;\""
       interval: 5s
