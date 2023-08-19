@@ -26,10 +26,6 @@ secrets:
     SPRING_RABBITMQ_USERNAME: rabbit-user-dev
     SPRING_RABBITMQ_PASSWORD: rabbit-pass-dev
 
-#  rabbitmq-zipkin-credentials:
-#    RABBIT_USER: rabbit-user-dev
-#    RABBIT_PASS: rabbit-pass-dev
-
   mongodb-server-credentials:
     MONGO_INITDB_ROOT_USERNAME: mongodb-user-dev
     MONGO_INITDB_ROOT_PASSWORD: mongodb-pass-dev
@@ -85,8 +81,4 @@ product-composite:
 #    RESILIENCE4J_TIMELIMITER_INSTANCES_PRODUCT_TIMEOUTDURATION: 20s
   envFromSecretRefs:
     - rabbitmq-credentials
-
-#zipkin-server:
-#  envFromSecretRefs:
-#    - rabbitmq-zipkin-credentials
 

@@ -21,7 +21,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.7.0")
 	implementation("io.micrometer:micrometer-tracing-bridge-otel:1.1.2")
-	implementation("io.opentelemetry:opentelemetry-exporter-zipkin:1.27.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")

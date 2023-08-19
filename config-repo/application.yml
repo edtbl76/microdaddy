@@ -46,8 +46,6 @@ management:
         http:
           server:
             requests: true
-  # Must be configured like this.
-  zipkin.tracing.endpoint: http://zipkin-server:9411/api/v2/spans
 
 ---
 spring:

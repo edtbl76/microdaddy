@@ -22,9 +22,6 @@ secrets:
     SPRING_RABBITMQ_USERNAME: rabbit-user-prod
     SPRING_RABBITMQ_PASSWORD: rabbit-pass-prod
 
-#  rabbitmq-zipkin-credentials:
-#    RABBIT_USER: rabbit-user-prod
-#    RABBIT_PASS: rabbit-pass-prod
 #
   mongodb-credentials:
 #    SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
@@ -77,13 +74,3 @@ product-composite:
     SPRING_PROFILES_ACTIVE: "docker,production"
   envFromSecretRefs:
     - rabbitmq-credentials
-
-zipkin-server:
-  env:
-    LOGGING_LEVEL_ROOT: WARN
-#    RABBIT_ADDRESSES: 172.17.0.1
-#  envFromSecretRefs:
-#    - rabbitmq-zipkin-credentials
-  resources:
-    limits:
-      memory: 600Mi
