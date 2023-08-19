@@ -87,7 +87,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USR}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PWD}
     healthcheck:
-      test: "mongosh --eval 'db.stats().ok'"
+      test: "mongosh --username ${MONGODB_USR} --password ${MONGODB_PWD} --eval 'db.stats().ok'"
       interval: 5s
       timeout: 2s
       retries: 60
